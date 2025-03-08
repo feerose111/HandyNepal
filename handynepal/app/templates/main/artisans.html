@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HandyNepal - Our Artisans{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/artisans.css' %}?v={% now 'U' %}">
+{% endblock %}
+ 
+{% block content %}
+<!-- Artisans Header Section -->
+<div class="artisans-header">
+   <div class="container">
+      <h1 class="artisans-title">Meet Our Artisans</h1>
+      <p class="artisans-subtitle">The skilled craftspeople behind our authentic Nepalese handicrafts</p>
+   </div>
+</div>
+
+<!-- Artisans Introduction -->
+<div class="artisans-intro">
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-lg-6">
+            <div class="intro-content">
+               <h2>The Heart of HandyNepal</h2>
+               <p>Our artisans are the soul of our business. Each product in our collection is handcrafted by skilled artisans who have inherited generations of craftsmanship knowledge and techniques.</p>
+               <p>We work directly with over 50 artisans across Nepal, ensuring fair compensation and sustainable livelihoods while preserving traditional crafts that might otherwise be lost to time.</p>
+               <div class="intro-stats">
+                  <div class="stat-item">
+                     <span class="stat-number">50+</span>
+                     <span class="stat-label">Artisans</span>
+                  </div>
+                  <div class="stat-item">
+                     <span class="stat-number">15+</span>
+                     <span class="stat-label">Villages</span>
+                  </div>
+                  <div class="stat-item">
+                     <span class="stat-number">6</span>
+                     <span class="stat-label">Craft Types</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-6">
+            <div class="intro-image">
+               <img src="{% static 'images\Cover-Story-Artisans.png' %}" alt="Artisan Working" onerror="this.src='https://via.placeholder.com/600x400?text=Artisan+Working'">
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Featured Artisans -->
+<div class="featured-artisans">
+   <div class="container">
+      <h2 class="section-title">Featured Artisans</h2>
+      <p class="section-subtitle">Meet the master craftspeople behind our most popular collections</p>
+      
+      <div class="row g-4">
+         <!-- Artisan 1 -->
+         <div class="col-md-6 col-lg-4">
+            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal1">
+               <div class="artisan-img-container">
+                  <img src="{% static 'images/artisan.png' %}" alt="Ram Bahadur" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
+                  <h3 class="artisan-name">Ram Bahadur</h3>
+                  <p class="artisan-specialty">Wood Carving Expert</p>
+                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
+                  <div class="artisan-skills">
+                     <span>Wood Carving</span>
+                     <span>Sculpture</span>
+                     <span>Restoration</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Artisan 2 -->
+         <div class="col-md-6 col-lg-4">
+            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal2">
+               <div class="artisan-img-container">
+                  <img src="{% static 'images/artisan.png' %}" alt="Sita Sharma" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
+                  <h3 class="artisan-name">Sita Sharma</h3>
+                  <p class="artisan-specialty">Textile Weaver</p>
+                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Kirtipur, Nepal</p>
+                  <div class="artisan-skills">
+                     <span>Weaving</span>
+                     <span>Dyeing</span>
+                     <span>Embroidery</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Artisan 3 -->
+         <div class="col-md-6 col-lg-4">
+            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal3">
+               <div class="artisan-img-container">
+                  <img src="{% static 'images/artisan.png' %}" alt="Krishna Tamang" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
+                  <h3 class="artisan-name">Krishna Tamang</h3>
+                  <p class="artisan-specialty">Metal Craftsman</p>
+                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Patan, Nepal</p>
+                  <div class="artisan-skills">
+                     <span>Metal Work</span>
+                     <span>Singing Bowls</span>
+                     <span>Statues</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Artisan 4 -->
+         <div class="col-md-6 col-lg-4">
+            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal4">
+               <div class="artisan-img-container">
+                  <img src="{% static 'images/artisan.png' %}" alt="Maya Gurung" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
+                  <h3 class="artisan-name">Maya Gurung</h3>
+                  <p class="artisan-specialty">Pottery Expert</p>
+                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Thimi, Nepal</p>
+                  <div class="artisan-skills">
+                     <span>Pottery</span>
+                     <span>Ceramics</span>
+                     <span>Clay Art</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Artisan 5 -->
+         <div class="col-md-6 col-lg-4">
+            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal5">
+               <div class="artisan-img-container">
+                  <img src="{% static 'images/artisan.png' %}" alt="Dipak Shrestha" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
+                  <h3 class="artisan-name">Dipak Shrestha</h3>
+                  <p class="artisan-specialty">Paper Craftsman</p>
+                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
+                  <div class="artisan-skills">
+                     <span>Lokta Paper</span>
+                     <span>Journals</span>
+                     <span>Paper Art</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Artisan 6 -->
+         <div class="col-md-6 col-lg-4">
+            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal6">
+               <div class="artisan-img-container">
+                  <img src="{% static 'images/artisan.png' %}" alt="Laxmi Maharjan" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
+                  <h3 class="artisan-name">Laxmi Maharjan</h3>
+                  <p class="artisan-specialty">Jewelry Maker</p>
+                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Lalitpur, Nepal</p>
+                  <div class="artisan-skills">
+                     <span>Silver Work</span>
+                     <span>Beadwork</span>
+                     <span>Traditional Jewelry</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Artisan Support Section -->
+<div class="artisan-support">
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-lg-6">
+            <div class="support-image">
+               <img src="{% static 'images/artisan_page.png' %}" alt="Artisan Community" onerror="this.src='https://via.placeholder.com/600x400?text=Artisan+Community'">
+            </div>
+         </div>
+         <div class="col-lg-6">
+            <div class="support-content">
+               <h2>Supporting Artisan Communities</h2>
+               <p>At HandyNepal, we're committed to supporting artisan communities across Nepal. Through fair trade practices and direct partnerships, we ensure that our artisans receive fair compensation for their work.</p>
+               <p>A portion of every purchase goes directly to community development initiatives, including education programs for artisans' children and healthcare services in remote villages.</p>
+               <a href="#" class="btn-learn-more">Learn About Our Impact</a>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Artisan Modals -->
+<!-- Modal 1: Ram Bahadur -->
+<div class="modal fade" id="artisanModal1" tabindex="-1" aria-labelledby="artisanModal1Label" aria-hidden="true">
+   <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="artisanModal1Label">Ram Bahadur</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div class="col-md-5">
+                  <img src="{% static 'images/artisan.png' %}" alt="Ram Bahadur" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-details mt-3">
+                     <p><strong>Specialty:</strong> Wood Carving Expert</p>
+                     <p><strong>Location:</strong> Bhaktapur, Nepal</p>
+                     <p><strong>Experience:</strong> 25+ years</p>
+                     <p><strong>Products:</strong> Wooden Statues, Masks, Decorative Items</p>
+                  </div>
+               </div>
+               <div class="col-md-7">
+                  <h4>Artisan Story</h4>
+                  <p>Ram Bahadur comes from a long line of wood carvers in Bhaktapur, a city renowned for its wood carving tradition. He began learning the craft at the age of 10 from his father and grandfather, who were master carvers in their community.</p>
+                  <p>Specializing in traditional Nepalese motifs and religious figures, Ram's work is characterized by intricate details and smooth finishing. Each piece takes anywhere from a few days to several months to complete, depending on the complexity.</p>
+                  <p>Ram is particularly known for his Buddha statues and traditional Newari window frames, which showcase the rich cultural heritage of Nepal. He uses sustainable local wood and traditional hand tools that have been passed down through generations.</p>
+                  <p>Today, Ram not only creates masterpieces but also trains young apprentices, ensuring that this ancient craft continues to thrive in modern times.</p>
+                  <h4 class="mt-4">Featured Products</h4>
+                  <div class="row g-2 mt-2">
+                     <div class="col-4">
+                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
+                     </div>
+                     <div class="col-4">
+                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
+                     </div>
+                     <div class="col-4">
+                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="{% url 'home' %}" class="btn btn-primary">View Products</a>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Modal 2: Sita Sharma -->
+<div class="modal fade" id="artisanModal2" tabindex="-1" aria-labelledby="artisanModal2Label" aria-hidden="true">
+   <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="artisanModal2Label">Sita Sharma</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div class="col-md-5">
+                  <img src="{% static 'images/artisan.png' %}" alt="Sita Sharma" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  <div class="artisan-details mt-3">
+                     <p><strong>Specialty:</strong> Textile Weaver</p>
+                     <p><strong>Location:</strong> Kirtipur, Nepal</p>
+                     <p><strong>Experience:</strong> 18 years</p>
+                     <p><strong>Products:</strong> Pashmina Shawls, Traditional Fabrics, Garments</p>
+                  </div>
+               </div>
+               <div class="col-md-7">
+                  <h4>Artisan Story</h4>
+                  <p>Sita Sharma learned the art of weaving from her mother at a young age in their small village in Kirtipur. What started as a household necessity became her passion and eventually her livelihood.</p>
+                  <p>Sita specializes in traditional Nepalese textile patterns, particularly the intricate designs found in Dhaka fabric and Pashmina shawls. She uses natural dyes derived from local plants and minerals, creating vibrant colors that are both beautiful and environmentally friendly.</p>
+                  <p>Her weaving process is entirely done by hand on traditional looms, a technique that has remained unchanged for centuries. Each piece takes several weeks to complete, with patterns that tell stories of Nepalese culture and history.</p>
+                  <p>Sita now leads a women's weaving cooperative that provides sustainable income for over 20 women in her community, empowering them through the preservation of traditional crafts.</p>
+                  <h4 class="mt-4">Featured Products</h4>
+                  <div class="row g-2 mt-2">
+                     <div class="col-4">
+                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
+                     </div>
+                     <div class="col-4">
+                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
+                     </div>
+                     <div class="col-4">
+                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <a href="{% url 'home' %}" class="btn btn-primary">View Products</a>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Additional modals for other artisans would follow the same pattern -->
+
+{% endblock %} 

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+  {% load static %}
+  
+{% block title %}HandyNepal - Login{% endblock %}
+   
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/authentication.css' %}">
+{% endblock  %}
+
+{% block content %}
+    <div class="auth-container">
+        <h1 class="auth-title">Welcome Back</h1>
+        <form id="loginForm" method="post" action="{% url 'user_login' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+            </div>
+
+            {% if error_message %}
+            <div class="error mb-3">{{ error_message }}</div>
+            {% endif %}
+
+            <button type="submit" class="auth-btn">Login</button>
+
+            <div class="auth-link">
+                Don't have an account? <a href="{% url 'user_registration' %}">Register</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

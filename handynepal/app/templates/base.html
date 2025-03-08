@@ -13,39 +13,16 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v={% now 'U' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Header -->
     <header>
-        <!-- Top Bar -->
-        <div class="top-bar bg-dark text-white">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="contact-info">
-                        <a href="mailto:info@handynepal.com" class="text-white text-decoration-none">
-                            <i class="fas fa-envelope me-2"></i>info@handynepal.com
-                        </a>
-                        <a href="tel:+977123456789" class="text-white text-decoration-none ms-4">
-                            <i class="fas fa-phone me-2"></i>+977 123456789
-                        </a>
-                    </div>
-                    <div class="social-icons ms-auto ps-4">
-                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-pinterest"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Main Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'home' %}" style="font-family: 'Playfair Display', serif; font-weight: 700;">
+                <a class="navbar-brand" href="{% url 'home' %}" style="font-family: 'Playfair Display', serif; font-weight: 700; color: #E6A23C;">
                     <img src="{% static 'images/handynepal_logo.png' %}" alt="HandyNepal Logo" height="60" width="60" onerror="this.src='https://via.placeholder.com/60x60?text=HN'">
                     HANDYNEPAL
                 </a>
@@ -56,38 +33,38 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <form class="search-form d-flex mx-auto" style="max-width: 500px;" action="{% url 'home' %}" method="get">
                         <input class="form-control me-2" type="search" placeholder="Search handcrafted products..." aria-label="Search" name="q">
-                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-outline-warning" type="submit"><i class="fas fa-search"></i></button>
                     </form>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}">Home</a>
+                            <a class="nav-link text-golden" href="{% url 'home' %}">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <a class="nav-link dropdown-toggle text-golden" href="{% url 'collections' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                                 Collections
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Wood Crafts</a></li>
-                                <li><a class="dropdown-item" href="#">Pottery</a></li>
-                                <li><a class="dropdown-item" href="#">Textiles</a></li>
-                                <li><a class="dropdown-item" href="#">Metal Works</a></li>
-                                <li><a class="dropdown-item" href="#">Paper Crafts</a></li>
+                            <ul class="dropdown-menu bg-dark">
+                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Wood Crafts</a></li>
+                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Pottery</a></li>
+                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Textiles</a></li>
+                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Metal Works</a></li>
+                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Paper Crafts</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Artisans</a>
+                            <a class="nav-link text-golden" href="{% url 'artisans' %}">Artisans</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About Us</a>
+                            <a class="nav-link text-golden" href="{% url 'about' %}">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                            <a class="nav-link text-golden" href="{% url 'contact' %}">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> <span class="badge bg-primary rounded-pill">0</span></a>
+                            <a class="nav-link text-golden" href="#"><i class="fas fa-shopping-cart"></i> <span class="badge bg-warning text-dark rounded-pill">0</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-user"></i></a>
+                            <a class="nav-link text-golden" href="{% url 'user_login' %}"><i class="fas fa-user"></i></a> 
                         </li>
                     </ul>
                 </div>
@@ -96,7 +73,7 @@
     </header>
 
     <!-- Main Content -->
-    <main>
+    <main class="main-content">
         {% block content %}
         <!-- Content will be inserted here -->
         {% endblock %}
@@ -118,7 +95,7 @@
                 </div>
                 
                 <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Quick Links</h5>
+                    <h3 class="mb-4">Quick Links</h3>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none mb-2 d-block">Home</a></li>
                         <li><a href="#" class="text-white text-decoration-none mb-2 d-block">Shop</a></li>
@@ -129,7 +106,7 @@
                 </div>
                 
                 <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Help</h5>
+                    <h3 class="mb-4">Help</h3>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none mb-2 d-block">FAQ</a></li>
                         <li><a href="#" class="text-white text-decoration-none mb-2 d-block">Shipping & Returns</a></li>
@@ -140,7 +117,7 @@
                 </div>
                 
                 <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Contact Us</h5>
+                    <h3 class="mb-4">Contact Us</h3>
                     <ul class="list-unstyled">
                         <li class="mb-2"><i class="fas fa-home me-3"></i> Thamel, Kathmandu, Nepal</li>
                         <li class="mb-2"><i class="fas fa-envelope me-3"></i> info@handynepal.com</li>
@@ -153,7 +130,7 @@
             <hr class="my-4 border-secondary">
             
             <div class="row">
-                <div class="col-md-6 text-center text-md-start">
+                <div class="col-md-6 text-center text-md-start ">
                     <p class="small text-muted">&copy; {% now "Y" %} HandyNepal. All rights reserved.</p>
                 </div>
                 <!-- <div class="col-md-6 text-center text-md-end">

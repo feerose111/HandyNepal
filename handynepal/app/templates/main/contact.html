@@ -1,99 +1,97 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-  contact
-{% endblock title %}
+{% block title %}HandyNepal - Contact Us{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}?v={% now 'U' %}">
+{% endblock %}
  
 {% block content %}
-
-<!-- contact section start -->
+<!-- Contact Header Section -->
 <div class="contact_section layout_padding">
    <div class="container">
-      <h1 class="contact_text">Our Contact</h1>
+      <h1 class="contact_text">Contact Us</h1>
       <p class="pin">GET IN TOUCH</p>
-      <p class="pin"><span style='color:red'>Our Friendly Team </span>would love to hear from you</p>
-
+      <p class="pin"><span style='color: var(--secondary-color);'>Our Friendly Team</span> would love to hear from you</p>
    </div>
 </div>
 
-
-<div class="services_section_2">
-   <div class="row">
-      <div class="col-lg-4 col-sm-12 col-md-4">
-         <div class="box_main">
-            <div class="house_icon">
+<!-- Contact Info Cards -->
+<div class="container">
+   <div class="services_section_2">
+      <div class="row">
+         <div class="col-lg-4 col-sm-12 col-md-4">
+            <div class="box_main">
+               <a id="myLoc" href="#mapSection">
+                  <h3 class="decorate_text"><i class="fas fa-map-marker-alt"></i>LOCATION</h3>
+                  <p class="tation_text">Thamel, Kathmandu, Nepal</p>
+               </a>
+               <div class="readmore_bt"><a href="#mapSection">View Map</a></div>
             </div>
-            <a id="myLoc" href="#"><h3 class="decorate_text"><i class="fa-sharp fa-solid fa-location-dot"></i>LOCATION</h3>
-            <p class="tation_text">Duhabi-4 sunsari, Nepal</p>
-            </a>
-            <div class="readmore_bt"><a href="#">Read More</a></div>
+         </div>
+         <div class="col-lg-4 col-sm-12 col-md-4">
+            <div class="box_main">
+               <a href="tel:+9771234567890">
+                  <h3 class="decorate_text"><i class="fas fa-phone"></i>PHONE</h3>
+                  <p class="tation_text">Mobile: (+977) 1234567890</p>
+               </a>
+               <div class="readmore_bt"><a href="tel:+9771234567890">Call Now</a></div>
+            </div>
+         </div>
+         <div class="col-lg-4 col-sm-12 col-md-4">
+            <div class="box_main">
+               <a href="mailto:info@handynepal.com">
+                  <h3 class="decorate_text"><i class="fas fa-envelope"></i>EMAIL</h3>
+                  <p class="tation_text">Email: info@handynepal.com</p>
+               </a>
+               <div class="readmore_bt"><a href="mailto:info@handynepal.com">Send Email</a></div>
+            </div>
          </div>
       </div>
-      <div class="col-lg-4 col-sm-12 col-md-4">
-         <div class="box_main">
-            <div class="house_icon">
-            </div>
-            <a href="tel:9805352767"><h3 class="decorate_text"><i class="fa-solid fa-phone"></i>PHONE</h3>
-            <p class="tation_text">Mobile:(+977) 9816107823</p>
-            </a>
-            <div class="readmore_bt"><a href="#">Read More</a></div>
-         </div>
-      </div>
+   </div>
+</div>
 
-      <div class="col-lg-4 col-sm-12 col-md-4">
-         <div class="box_main">
-            <div class="house_icon">
-            </div>
-            <a href="mailto:feerose009@gmail.com">
-            <h3 class="decorate_text"><i class="fa-solid fa-envelope"></i>EMAIL</h3>
-            <p class="tation_text">Email: feerose009@gmail.com </p>
-            </a>
-            <div class="readmore_bt"><a href="#">Read More</a></div>
-         </div>
-      </div>
+<!-- Contact Form Section -->
+<div class="contact_section_2 layout_padding">
+   <div class="container">
+      <div class="row">
+         <div class="col-md-12 padding_0 d-flex justify-content-center align-items-center">
+            <div class="form-container-1">
+               <form method="POST" action="{% url 'contact' %}">
+                  {% csrf_token %}
+                  <h1 style="color: var(--secondary-color); font-size: 2.5rem; margin-bottom: 30px;"
+                     class="text-center">GET IN TOUCH</h1>
 
-      <div class="contact_section_2 layout_padding">
-         <div class="container-fluid">
-            <div class="row">
-               <div class="col-md-12 padding_0  d-flex justify-content-center align-items-center ">
-                  <div class="form-container form-container-1">
-                     <form method="POST" action="{% url 'contact' %}">
-                        {% csrf_token %}
-                        <h1 style="color: white; font-size: 50px; border-bottom: 3px solid #f76d37;"
-                           class="text-center"><b>GET IN TOUCH</b></h1>
-
-                        <div class="form-container">
-                           <div class="form">
-                              <input required="" placeholder="Name" type="text" class="input" name="name">
-                              <input required="" placeholder="Email" type="email" class="input" name="email">
-                              <input required="" placeholder="Phone Number" type="tel" class="input" name="phone">
-                              <textarea required="" placeholder="Say Hello" rows="10" cols="30" id="message"
-                                 name="message" class="textarea"></textarea>
-                              <div class="button-container">
-                                 <input type="submit" value="send" class="send-button">
-
-                              </div>
-                           </div>
-                        </div>
-                     </form>
+                  <div class="form">
+                     <input required placeholder="Your Name" type="text" class="input" name="name">
+                     <input required placeholder="Your Email" type="email" class="input" name="email">
+                     <input required placeholder="Your Phone Number" type="tel" class="input" name="phone">
+                     <textarea required placeholder="Your Message" rows="6" id="message"
+                        name="message" class="textarea"></textarea>
+                     <div class="button-container">
+                        <input type="submit" value="Send Message" class="send-button">
+                     </div>
                   </div>
-
-               </div>
-            </div>
-      <div class="mapSection">
-         <div class="row">
-            <div class="col-md-12 padding_0">
-               <div class="map-responsive" id="mapSection">
-                  <h1 style="color: black; font-size: 50px;" class="text-center"><b>OUR LOCATION</b></h1>
-
-                  <iframe id="myIframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3568.3236397904443!2d87.27759962164708!3d26.573987992813493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ef727304accbcb%3A0xa8c3e0f33225f48d!2sPathivara%20Petrol%20Pump%20Duhabi!5e0!3m2!1sen!2snp!4v1728142420116!5m2!1sen!2snp"
-                   width="600" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-               </div>
+               </form>
             </div>
          </div>
       </div>
+   </div>
+</div>
+
+<!-- Map Section -->
+<div class="mapSection" id="mapSection">
+   <div class="container">
+      <div class="row">
+         <div class="col-md-12 text-center">
+            <h1>OUR LOCATION</h1>
+            <div class="map-responsive mt-4">
+               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.2585173072237!2d85.30732807548804!3d27.71524797619636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb18fcb77fd4bd%3A0x58119f13f1c6f80c!2sThamel%2C%20Kathmandu%2044600!5e0!3m2!1sen!2snp!4v1687349290957!5m2!1sen!2snp"
+                  width="800" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
          </div>
       </div>
-  
-{% endblock content %}
+   </div>
+</div>
+{% endblock %}
