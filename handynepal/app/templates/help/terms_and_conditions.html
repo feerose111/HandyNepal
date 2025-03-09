@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Terms and Conditions - HandyNepal Help Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/help/help_section.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="help-header">
+    <div class="container">
+        <h1 class="help-title">Terms and Conditions</h1>
+        <p class="help-subtitle">Please read these terms carefully before using our services</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="help-sidebar">
+                <h4>Help Topics</h4>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                    <li><a href="{% url 'shipping_returns' %}">Shipping & Returns</a></li>
+                    <li><a href="{% url 'payment' %}">Payment Methods</a></li>
+                    <li><a href="{% url 'terms_and_conditions' %}" class="active">Terms & Conditions</a></li>
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="help-content">
+                <div class="help-section">
+                    <p class="mb-4">Last updated: March 1, 2023</p>
+                    
+                    <p>Welcome to HandyNepal. These Terms and Conditions govern your use of our website and services. By accessing or using our website, you agree to be bound by these Terms. If you disagree with any part of these terms, please do not use our website or services.</p>
+                    
+                    <h2 class="help-section-title mt-5">1. Definitions</h2>
+                    <ul>
+                        <li><strong>"Company", "We", "Us", "Our"</strong> refers to HandyNepal.</li>
+                        <li><strong>"Website"</strong> refers to HandyNepal, accessible at www.handynepal.com.</li>
+                        <li><strong>"Service"</strong> refers to the Company's services accessed via the Website.</li>
+                        <li><strong>"You", "Your"</strong> refers to the individual accessing or using the Service, or the company or legal entity on behalf of which such individual is accessing or using the Service.</li>
+                        <li><strong>"Goods"</strong> refers to the items offered for sale on the Service.</li>
+                        <li><strong>"Orders"</strong> refers to a request by You to purchase Goods from Us.</li>
+                    </ul>
+                    
+                    <h2 class="help-section-title mt-5">2. Purchases</h2>
+                    <p>If You wish to purchase any product or service made available through the Service ("Purchase"), You may be asked to supply certain information relevant to Your Purchase including, without limitation, Your name, Your credit card number, the expiration date of Your credit card, Your billing address, and Your shipping information.</p>
+                    
+                    <p>You represent and warrant that: (i) You have the legal right to use any credit card(s) or other payment method(s) in connection with any Purchase; and that (ii) the information You supply to us is true, correct and complete.</p>
+                    
+                    <p>By submitting such information, You grant us the right to provide the information to third parties for purposes of facilitating the completion of Purchases.</p>
+                    
+                    <h2 class="help-section-title mt-5">3. Availability, Errors and Inaccuracies</h2>
+                    <p>We are constantly updating our offerings of Goods on the Service. The Goods available on our Service may be mispriced, described inaccurately, or unavailable, and we may experience delays in updating information on the Service and in our advertising on other websites.</p>
+                    
+                    <p>We cannot and do not guarantee the accuracy or completeness of any information, including prices, product images, specifications, availability, and services. We reserve the right to change or update information and to correct errors, inaccuracies, or omissions at any time without prior notice.</p>
+                    
+                    <h2 class="help-section-title mt-5">4. Shipping and Delivery</h2>
+                    <p>Shipping and delivery dates are estimates only and cannot be guaranteed. We are not liable for any delays in shipments. Risk of loss and title for items purchased from our website pass to you upon delivery of the items to the carrier.</p>
+                    
+                    <h2 class="help-section-title mt-5">5. User Accounts</h2>
+                    <p>When You create an account with Us, You must provide Us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of Your account on our Service.</p>
+                    
+                    <p>You are responsible for safeguarding the password that You use to access the Service and for any activities or actions under Your password, whether Your password is with our Service or a third-party service.</p>
+                    
+                    <p>You agree not to disclose Your password to any third party. You must notify Us immediately upon becoming aware of any breach of security or unauthorized use of Your account.</p>
+                    
+                    <h2 class="help-section-title mt-5">6. Intellectual Property</h2>
+                    <p>The Service and its original content, features, and functionality are and will remain the exclusive property of HandyNepal and its licensors. The Service is protected by copyright, trademark, and other laws of both Nepal and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of HandyNepal.</p>
+                    
+                    <h2 class="help-section-title mt-5">7. Termination</h2>
+                    <p>We may terminate or suspend Your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if You breach the Terms.</p>
+                    
+                    <p>Upon termination, Your right to use the Service will cease immediately. If You wish to terminate Your account, You may simply discontinue using the Service.</p>
+                    
+                    <h2 class="help-section-title mt-5">8. Limitation of Liability</h2>
+                    <p>In no event shall HandyNepal, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage.</p>
+                    
+                    <h2 class="help-section-title mt-5">9. Changes to Terms</h2>
+                    <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
+                    
+                    <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
+                    
+                    <h2 class="help-section-title mt-5">10. Contact Us</h2>
+                    <p>If you have any questions about these Terms, please contact us:</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i> Email: legal@handynepal.com</li>
+                        <li><i class="fas fa-phone me-2"></i> Phone: +977-1-XXXXXXX</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> Address: Thamel, Kathmandu, Nepal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
