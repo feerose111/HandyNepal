@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shipping & Returns - HandyNepal Help Center{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/help/help_section.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="help-header">
+    <div class="container">
+        <h1 class="help-title">Shipping & Returns</h1>
+        <p class="help-subtitle">Information about our shipping policies and return process</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="help-sidebar">
+                <h4>Help Topics</h4>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                    <li><a href="{% url 'shipping_returns' %}" class="active">Shipping & Returns</a></li>
+                    <li><a href="{% url 'payment' %}">Payment Methods</a></li>
+                    <li><a href="{% url 'terms_and_conditions' %}">Terms & Conditions</a></li>
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="help-content">
+                <h2 class="help-section-title">Shipping Information</h2>
+                <div class="help-section">
+                    <h3>Shipping Methods</h3>
+                    <p>We offer several shipping options to meet your needs:</p>
+                    <ul>
+                        <li><strong>Standard Shipping:</strong> 7-10 business days</li>
+                        <li><strong>Express Shipping:</strong> 3-5 business days</li>
+                        <li><strong>Priority Shipping:</strong> 1-2 business days</li>
+                    </ul>
+                    <p>Shipping times may vary depending on your location and customs processing for international orders.</p>
+                    
+                    <h3>Shipping Costs</h3>
+                    <p>Shipping costs are calculated based on the weight of your order, shipping method, and destination:</p>
+                    <ul>
+                        <li>Orders under $50: Standard shipping starts at $5.99</li>
+                        <li>Orders $50-$100: Standard shipping starts at $7.99</li>
+                        <li>Orders over $100: Standard shipping starts at $9.99</li>
+                        <li>Free standard shipping on orders over $150 (domestic only)</li>
+                    </ul>
+                    <p>Express and Priority shipping options are available at checkout for an additional fee.</p>
+                    
+                    <h3>International Shipping</h3>
+                    <p>We ship to most countries worldwide. International customers may be subject to import duties and taxes, which are the responsibility of the recipient. Please check your country's import regulations before placing an order.</p>
+                    
+                    <h3>Order Tracking</h3>
+                    <p>Once your order ships, you'll receive a confirmation email with tracking information. You can also track your order by logging into your account and viewing your order history.</p>
+                </div>
+                
+                <h2 class="help-section-title mt-5">Returns & Exchanges</h2>
+                <div class="help-section">
+                    <h3>Return Policy</h3>
+                    <p>We want you to be completely satisfied with your purchase. If you're not happy with your order, you can return most items within 30 days of delivery for a full refund or exchange.</p>
+                    
+                    <h3>Return Eligibility</h3>
+                    <p>To be eligible for a return, your item must be:</p>
+                    <ul>
+                        <li>In the same condition as you received it</li>
+                        <li>In the original packaging</li>
+                        <li>Accompanied by the original receipt or proof of purchase</li>
+                    </ul>
+                    <p>Please note that certain items cannot be returned, including:</p>
+                    <ul>
+                        <li>Custom or personalized items</li>
+                        <li>Perishable goods</li>
+                        <li>Items marked as final sale</li>
+                    </ul>
+                    
+                    <h3>How to Initiate a Return</h3>
+                    <p>To start the return process:</p>
+                    <ol>
+                        <li>Log into your account and go to your order history</li>
+                        <li>Select the order containing the item(s) you wish to return</li>
+                        <li>Click "Return Items" and follow the instructions</li>
+                        <li>Print the prepaid return shipping label (if applicable)</li>
+                        <li>Package your items securely with the return form</li>
+                        <li>Drop off the package at the designated shipping carrier</li>
+                    </ol>
+                    
+                    <h3>Refund Processing</h3>
+                    <p>Once we receive your return, we'll inspect the item(s) and notify you of the status of your refund. If approved, your refund will be processed within 5-7 business days. Refunds will be issued to the original payment method used for the purchase.</p>
+                    
+                    <h3>Exchanges</h3>
+                    <p>If you'd like to exchange an item for a different size, color, or product, please follow the return process and place a new order for the desired item. This ensures the fastest processing time.</p>
+                    
+                    <h3>Damaged or Defective Items</h3>
+                    <p>If you receive a damaged or defective item, please contact our customer service team within 48 hours of delivery. We'll arrange for a replacement or refund at no additional cost to you.</p>
+                </div>
+                
+                <div class="help-contact mt-5">
+                    <h3>Need More Help?</h3>
+                    <p>If you have any questions about shipping or returns, please contact our customer service team:</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i> Email: support@handynepal.com</li>
+                        <li><i class="fas fa-phone me-2"></i> Phone: +977-1-XXXXXXX</li>
+                        <li><i class="fas fa-comment me-2"></i> Live Chat: Available 9am-5pm NPT, Monday-Friday</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

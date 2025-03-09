@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}HandyNepal - Authentic Nepalese Handicrafts{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="display-4 fw-bold">Authentic Nepalese Handicrafts</h1>
+            <p class="lead mb-4">Discover unique handcrafted treasures made by skilled artisans of Nepal</p>
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'collections' %}" class="btn btn-primary btn-lg me-3 px-4 py-2">Explore Collection</a>
+                <a href="{% url 'artisans' %}" class="btn btn-outline-light btn-lg px-4 py-2">Meet Our Artisans</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Signup CTA Section -->
+<section class="signup-cta">
+    <div class="container">
+        <div class="signup-cta-content">
+            <h2>Become Part of Our Artisan Community</h2>
+            <p>Unlock exclusive access to limited-edition handicrafts, artisan stories, and special discounts. Join thousands of craft enthusiasts who've already discovered the beauty of authentic Nepalese craftsmanship.</p>
+            <div class="btn-container">
+                <a href="{% url 'user_registration' %}" class="btn-signup">Create Account <i class="fas fa-arrow-right ms-2"></i></a>
+                <a href="{% url 'user_login' %}" class="btn-login">Already a Member? Sign In</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Browse Categories</h2>
+        <div class="row g-4">
+            <div class="col-6 col-md-4">
+                <div class="card category-card">
+                    <img src="{% static 'images/wall_woodcraft.png' %}" class="card-img-top" alt="Wood Crafts">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Wood Crafts</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card category-card">
+                    <img src="{% static 'images/claypot.png' %}" class="card-img-top" alt="Pottery">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Pottery</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card category-card">
+                    <img src="{% static 'images/nepalese_shawl.png' %}" class="card-img-top" alt="Textiles">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Textiles</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card category-card">
+                    <img src="{% static 'images/metal_craft.png' %}" class="card-img-top" alt="Metal Crafts" onerror="this.src='https://via.placeholder.com/300x200?text=Metal+Crafts'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Metal Crafts</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card category-card">
+                    <img src="{% static 'images/nepalese_paper.png' %}" class="card-img-top" alt="Paper Crafts" onerror="this.src='https://via.placeholder.com/300x200?text=Paper+Crafts'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Paper Crafts</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card category-card">
+                    <img src="{% static 'images/jewelry.png' %}" class="card-img-top" alt="Jewelry" onerror="this.src='https://via.placeholder.com/300x200?text=Jewelry'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Jewelry</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="row g-4">
+            <!-- Product 1 -->
+            <div class="col-6 col-md-3">
+                <div class="product-card">
+                    <div class="position-relative">
+                        <span class="new-badge">New</span>
+                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Handcrafted Wooden Buddha Statue</h5>
+                        <div class="product-price">
+                            $89.99
+                        </div>
+                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="col-6 col-md-3">
+                <div class="product-card">
+                    <div class="position-relative">
+                        <span class="discount-badge">-20%</span>
+                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Traditional Nepalese Pashmina Shawl</h5>
+                        <div class="product-price">
+                            <span class="original-price">$75.00</span>
+                            $60.00
+                        </div>
+                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="col-6 col-md-3">
+                <div class="product-card">
+                    <div class="position-relative">
+                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Handmade Ceramic Tea Set</h5>
+                        <div class="product-price">
+                            $45.99
+                        </div>
+                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 4 -->
+            <div class="col-6 col-md-3">
+                <div class="product-card">
+                    <div class="position-relative">
+                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Traditional Singing Bowl Set</h5>
+                        <div class="product-price">
+                            $129.99
+                        </div>
+                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a href="#" class="btn btn-primary px-4 py-2">View All Products</a>
+        </div>
+    </div>
+</section>
+
+<!-- Artisan Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Meet Our Artisans</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="artisan-card">
+                    <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Ram Bahadur</h5>
+                        <p class="text-muted">Wood Carving Expert</p>
+                        <p class="small">Creating intricate wooden masterpieces for over 25 years.</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="artisan-card">
+                    <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Sita Sharma</h5>
+                        <p class="text-muted">Textile Weaver</p>
+                        <p class="small">Specializing in traditional Nepalese textile patterns.</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="artisan-card">
+                    <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Krishna Tamang</h5>
+                        <p class="text-muted">Metal Craftsman</p>
+                        <p class="small">Third-generation artisan creating exquisite metal works.</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial Section -->
+<section class="testimonial-section">
+    <div class="container">
+        <h2 class="section-title">What Our Customers Say</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The craftsmanship of the wooden Buddha statue I purchased is exceptional. The attention to detail is remarkable, and it has become the centerpiece of my meditation space."</p>
+                    </div>
+                    <div class="testimonial-author d-flex align-items-center mt-4">
+                        <img src="{% static 'images/customer.png' %}" alt="Customer" class="rounded-circle" width="60" height="60" onerror="this.src='https://via.placeholder.com/60x60?text=C'">
+                        <div class="ms-3">
+                            <h6 class="mb-1">Sarah Johnson</h6>
+                            <p class="text-muted mb-0">New York, USA</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"I've ordered multiple items from HandyNepal, and each piece tells a story. The quality is outstanding, and knowing that I'm supporting traditional artisans makes each purchase even more special."</p>
+                    </div>
+                    <div class="testimonial-author d-flex align-items-center mt-4">
+                        <img src="{% static 'images/customer.png' %}" alt="Customer" class="rounded-circle" width="60" height="60" onerror="this.src='https://via.placeholder.com/60x60?text=C'">
+                        <div class="ms-3">
+                            <h6 class="mb-1">David Miller</h6>
+                            <p class="text-muted mb-0">London, UK</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The Pashmina shawl I received is absolutely beautiful. The colors are vibrant, and the material is incredibly soft. I've received countless compliments on it. Highly recommend!"</p>
+                    </div>
+                    <div class="testimonial-author d-flex align-items-center mt-4">
+                        <img src="{% static 'images/customer.png' %}" alt="Customer" class="rounded-circle" width="60" height="60" onerror="this.src='https://via.placeholder.com/60x60?text=C'">
+                        <div class="ms-3">
+                            <h6 class="mb-1">Emily Chen</h6>
+                            <p class="text-muted mb-0">Toronto, Canada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2 class="section-title">Subscribe to Our Newsletter</h2>
+                <p class="mb-4">Stay updated with our latest collections, artisan stories, and exclusive offers.</p>
+                <form class="newsletter-form">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Your email address" required>
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Collection Process -->
+<div class="collection-process">
+    <div class="container">
+       <h2 class="section-title">Our Collection Process</h2>
+       <p class="section-subtitle">How we curate our authentic Nepalese handicrafts</p>
+       
+       <div class="row g-4 mt-4">
+          <div class="col-md-3">
+             <div class="process-step">
+                <div class="step-icon">
+                   <i class="fas fa-search"></i>
+                </div>
+                <h4>Discover</h4>
+                <p>We search remote villages across Nepal to find skilled artisans preserving traditional crafts.</p>
+             </div>
+          </div>
+          <div class="col-md-3">
+             <div class="process-step">
+                <div class="step-icon">
+                   <i class="fas fa-hands"></i>
+                </div>
+                <h4>Collaborate</h4>
+                <p>We work directly with artisans to ensure authentic techniques and fair compensation.</p>
+             </div>
+          </div>
+          <div class="col-md-3">
+             <div class="process-step">
+                <div class="step-icon">
+                   <i class="fas fa-check-double"></i>
+                </div>
+                <h4>Quality Check</h4>
+                <p>Each item undergoes rigorous quality control to ensure exceptional craftsmanship.</p>
+             </div>
+          </div>
+          <div class="col-md-3">
+             <div class="process-step">
+                <div class="step-icon">
+                   <i class="fas fa-box-open"></i>
+                </div>
+                <h4>Deliver</h4>
+                <p>We carefully package and deliver these treasures to customers worldwide.</p>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Additional JavaScript if needed
+</script>
+{% endblock %}

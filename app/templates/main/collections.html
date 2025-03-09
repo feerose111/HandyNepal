@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HandyNepal - Collections{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/collections.css' %}?v={% now 'U' %}">
+{% endblock %}
+ 
+{% block content %}
+<!-- Collections Header Section -->
+<div class="collections-header">
+   <div class="container">
+      <h1 class="collections-title">Our Collections</h1>
+      <p class="collections-subtitle">Explore our curated selection of authentic Nepalese handicrafts</p>
+   </div>
+</div>
+
+<!-- Featured Collection -->
+<div class="featured-collection">
+    <div class="container">
+       <h2 class="section-title">Featured Collection: Festival Season</h2>
+       <p class="section-subtitle">Special items perfect for celebrating Dashain and Tihar festivals</p>
+       
+       <div class="row g-4 mt-4">
+          <div class="col-md-6">
+             <div class="featured-image">
+                <img src="{% static 'images/festival_collection.png' %}" alt="Festival Collection" onerror="this.src='https://via.placeholder.com/600x400?text=Festival+Collection'">
+             </div>
+          </div>
+          <div class="col-md-6">
+             <div class="featured-content">
+                <h3>Celebrate with Authentic Crafts</h3>
+                <p>Our festival collection features specially curated items that represent the rich cultural heritage of Nepal. Each piece is handcrafted with care and attention to detail, making them perfect gifts for loved ones during the festive season.</p>
+                <ul class="featured-list">
+                   <li><i class="fas fa-check-circle"></i> Traditional festival decorations</li>
+                   <li><i class="fas fa-check-circle"></i> Ceremonial items for rituals</li>
+                   <li><i class="fas fa-check-circle"></i> Special gift sets</li>
+                   <li><i class="fas fa-check-circle"></i> Limited edition pieces</li>
+                </ul>
+                <a href="{% url 'home' %}" class="btn-explore">Explore Festival Collection</a>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+
+<!-- Categories Section -->
+<div class="categories-section">
+   <div class="container">
+      <div class="row g-4">
+         <!-- Wood Crafts -->
+         <div class="col-md-6 col-lg-4">
+            <div class="category-card">
+               <div class="category-img-container">
+                  <img src="{% static 'images/wall_woodcraft.png' %}" alt="Wood Crafts" class="category-img">
+                  <div class="category-overlay">
+                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
+                  </div>
+               </div>
+               <div class="category-content">
+                  <h3 class="category-title">Wood Crafts</h3>
+                  <p class="category-desc">Intricately carved wooden artifacts showcasing traditional Nepalese craftsmanship.</p>
+                  <div class="category-meta">
+                     <span><i class="fas fa-box"></i> 24 Products</span>
+                     <span><i class="fas fa-user-alt"></i> 5 Artisans</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Pottery -->
+         <div class="col-md-6 col-lg-4">
+            <div class="category-card">
+               <div class="category-img-container">
+                  <img src="{% static 'images/claypot.png' %}" alt="Pottery" class="category-img">
+                  <div class="category-overlay">
+                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
+                  </div>
+               </div>
+               <div class="category-content">
+                  <h3 class="category-title">Pottery</h3>
+                  <p class="category-desc">Handcrafted ceramic and clay items made using traditional techniques.</p>
+                  <div class="category-meta">
+                     <span><i class="fas fa-box"></i> 18 Products</span>
+                     <span><i class="fas fa-user-alt"></i> 4 Artisans</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Textiles -->
+         <div class="col-md-6 col-lg-4">
+            <div class="category-card">
+               <div class="category-img-container">
+                  <img src="{% static 'images/nepalese_shawl.png' %}" alt="Textiles" class="category-img">
+                  <div class="category-overlay">
+                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
+                  </div>
+               </div>
+               <div class="category-content">
+                  <h3 class="category-title">Textiles</h3>
+                  <p class="category-desc">Handwoven fabrics, shawls, and garments featuring traditional patterns.</p>
+                  <div class="category-meta">
+                     <span><i class="fas fa-box"></i> 30 Products</span>
+                     <span><i class="fas fa-user-alt"></i> 7 Artisans</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Metal Works -->
+         <div class="col-md-6 col-lg-4">
+            <div class="category-card">
+               <div class="category-img-container">
+                  <img src="{% static 'images/metal_craft.png' %}" alt="Metal Works" class="category-img" onerror="this.src='https://via.placeholder.com/400x300?text=Metal+Works'">
+                  <div class="category-overlay">
+                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
+                  </div>
+               </div>
+               <div class="category-content">
+                  <h3 class="category-title">Metal Works</h3>
+                  <p class="category-desc">Exquisite metal crafts including singing bowls, statues, and decorative items.</p>
+                  <div class="category-meta">
+                     <span><i class="fas fa-box"></i> 22 Products</span>
+                     <span><i class="fas fa-user-alt"></i> 6 Artisans</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Paper Crafts -->
+         <div class="col-md-6 col-lg-4">
+            <div class="category-card">
+               <div class="category-img-container">
+                  <img src="{% static 'images/nepalese_paper.png' %}" alt="Paper Crafts" class="category-img" onerror="this.src='https://via.placeholder.com/400x300?text=Paper+Crafts'">
+                  <div class="category-overlay">
+                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
+                  </div>
+               </div>
+               <div class="category-content">
+                  <h3 class="category-title">Paper Crafts</h3>
+                  <p class="category-desc">Handmade Lokta paper products including journals, lamps, and art pieces.</p>
+                  <div class="category-meta">
+                     <span><i class="fas fa-box"></i> 15 Products</span>
+                     <span><i class="fas fa-user-alt"></i> 3 Artisans</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <!-- Jewelry -->
+         <div class="col-md-6 col-lg-4">
+            <div class="category-card">
+               <div class="category-img-container">
+                  <img src="{% static 'images/jewelry.png' %}" alt="Jewelry" class="category-img" onerror="this.src='https://via.placeholder.com/400x300?text=Jewelry'">
+                  <div class="category-overlay">
+                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
+                  </div>
+               </div>
+               <div class="category-content">
+                  <h3 class="category-title">Jewelry</h3>
+                  <p class="category-desc">Traditional and contemporary jewelry pieces handcrafted by skilled artisans.</p>
+                  <div class="category-meta">
+                     <span><i class="fas fa-box"></i> 28 Products</span>
+                     <span><i class="fas fa-user-alt"></i> 5 Artisans</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{% endblock %} 
