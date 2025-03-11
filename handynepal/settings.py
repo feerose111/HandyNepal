@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'handynepal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'handynepal',
+        'USER': 'postgres',
+        'PASSWORD': 'admin@123',
+        'HOST': 'localhost', 
+        'PORT': '5432', 
     }
 }
 
@@ -130,3 +134,6 @@ MEDIA_URL='/media/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom User Model
+AUTH_USER_MODEL = 'app.User'
