@@ -4,7 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
-from .models import User  # Import the custom User model
+from datetime import datetime
+from django.utils import timezone
+from .models import User , Contact # Import the custom User model
 # Create your views here.
 
 def home(request):
@@ -20,6 +22,18 @@ def about(request):
     return render(request, 'main/about.html')
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        message = request.POST['message']
+        created_at = timezone.now()
+        
+        #save the data to the database
+        Contact.objects.create(name=name, email=email, phone=phone, message=message, created_at=created_at)
+        messages.success(request, 'Message sent successfully!')
+        return redirect('contact') 
+    
     return render(request, 'main/contact.html')
 
 def user_dashboard(request):
