@@ -57,6 +57,10 @@
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
+.box_main a {
+    text-decoration: none;
+}
+
 .decorate_text {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
