@@ -17,7 +17,7 @@ def home(request):
 
 def collections(request):
     # Get all products
-    products = Product.objects.all()
+    products_list = Product.objects.all()
     # Get all artisans for the filter
     all_artisans = Artisan.objects.all()
     
@@ -27,56 +27,71 @@ def collections(request):
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
     sort_by = request.GET.get('sort_by')
-    is_ajax = request.GET.get('ajax') == 'true'
     
     # Apply filters if provided
     if category:
-        products = products.filter(category__in=category)
+        products_list = products_list.filter(category__in=category)
     
     if artisan:
         # Split artisan names and filter by first name
         artisan_first_names = [a.split('-')[0] for a in artisan if '-' in a]
         if artisan_first_names:
-            products = products.filter(artisan__first_name__icontains=artisan_first_names[0])
+            products_list = products_list.filter(artisan__first_name__icontains=artisan_first_names[0])
     
     if min_price:
         try:
             min_price = float(min_price)
-            products = products.filter(price__gte=min_price)
+            products_list = products_list.filter(price__gte=min_price)
         except (ValueError, TypeError):
             pass
     
     if max_price:
         try:
             max_price = float(max_price)
-            products = products.filter(price__lte=max_price)
+            products_list = products_list.filter(price__lte=max_price)
         except (ValueError, TypeError):
             pass
     
     # Apply sorting
     if sort_by:
         if sort_by == 'price-low':
-            products = products.order_by('price')
+            products_list = products_list.order_by('price')
         elif sort_by == 'price-high':
-            products = products.order_by('-price')
+            products_list = products_list.order_by('-price')
         elif sort_by == 'newest':
-            products = products.order_by('-created_at')
+            products_list = products_list.order_by('-created_at')
         elif sort_by == 'bestselling':
             # First get bestsellers, then non-bestsellers
-            bestsellers = products.filter(is_bestseller=True)
-            non_bestsellers = products.filter(is_bestseller=False)
-            products = list(bestsellers) + list(non_bestsellers)
+            bestsellers = products_list.filter(is_bestseller=True)
+            non_bestsellers = products_list.filter(is_bestseller=False)
+            products_list = list(bestsellers) + list(non_bestsellers)
         elif sort_by == 'featured':
             # First get featured, then non-featured
-            featured = products.filter(is_featured=True)
-            non_featured = products.filter(is_featured=False)
-            products = list(featured) + list(non_featured)
+            featured = products_list.filter(is_featured=True)
+            non_featured = products_list.filter(is_featured=False)
+            products_list = list(featured) + list(non_featured)
     
-    # If this is an AJAX request, render only the product grid
-    if is_ajax:
-        return render(request, 'main/partials/product_grid.html', {'products': products})
+    # Pagination
+    page = request.GET.get('page', 1)
+    products_per_page = 3
+    paginator = Paginator(products_list, products_per_page)
     
-    return render(request, 'main/collections.html', {'products': products, 'all_artisans': all_artisans})
+    try:
+        products = paginator.page(page)
+    except:
+        products = paginator.page(1)
+    
+    return render(request, 'main/collections.html', {
+        'products': products, 
+        'all_artisans': all_artisans,
+        'current_filters': {
+            'category': category,
+            'artisan': artisan,
+            'min_price': min_price,
+            'max_price': max_price,
+            'sort_by': sort_by
+        }
+    })
 
 def artisans(request):
     artisans = Artisan.objects.all()

@@ -167,51 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
             params.set('sort_by', sortBy);
         }
         
-        // Add ajax parameter to indicate this is an AJAX request
-        params.set('ajax', 'true');
+        // Reset to page 1 when applying new filters
+        params.set('page', 1);
         
-        // Fetch products
-        fetch(url)
-            .then(response => response.text())
-            .then(html => {
-                // Parse HTML response
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newProductGrid = doc.getElementById('productGrid');
-                
-                // Update product grid
-                if (newProductGrid) {
-                    productGrid.innerHTML = newProductGrid.innerHTML;
-                    
-                    // Update product data container
-                    const productDataContainer = document.getElementById('product-data-container');
-                    const hiddenDataElements = doc.querySelectorAll('[id^="product-data-"]');
-                    
-                    if (productDataContainer && hiddenDataElements.length > 0) {
-                        productDataContainer.innerHTML = '';
-                        hiddenDataElements.forEach(element => {
-                            productDataContainer.appendChild(element.cloneNode(true));
-                        });
-                    }
-                } else {
-                    productGrid.innerHTML = '<div class="col-12 text-center py-5"><h3>No products found</h3><p>Try adjusting your filters or check back later for new products.</p></div>';
-                }
-                
-                // Update product count
-                const newProductCount = doc.getElementById('productCount');
-                if (newProductCount && productCount) {
-                    productCount.textContent = newProductCount.textContent;
-                } else {
-                    updateProductCount();
-                }
-                
-                // Reinitialize event listeners for new product items
-                initializeProductEventListeners();
-            })
-            .catch(error => {
-                console.error('Error fetching products:', error);
-                productGrid.innerHTML = '<div class="col-12 text-center py-5"><h3>Error loading products</h3><p>Please try again later.</p></div>';
-            });
+        // Navigate to the URL with filters
+        window.location.href = url.toString();
     }
     
     // Function to initialize event listeners for product items
@@ -283,6 +243,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (sortSelect && sortSelect.value !== 'featured') {
             params.set('sort_by', sortSelect.value);
+        }
+        
+        // Preserve page parameter if it exists
+        const currentPage = params.get('page');
+        if (currentPage) {
+            params.set('page', currentPage);
         }
         
         // Update URL without reloading the page
@@ -522,70 +488,87 @@ document.addEventListener('DOMContentLoaded', function() {
         const quickViewArtisan = document.getElementById('quickViewArtisan');
         const quickViewQuantity = document.getElementById('quickViewQuantity');
         
-        const productCard = document.querySelector(`[data-product-id="${productId}"]`).closest('.product-card');
-        const productImage = productCard.querySelector('img').src;
-        
         // Get product data from hidden div
         const productData = document.getElementById(`product-data-${productId}`);
         
-        if (productData) {
-            // Set modal content from data attributes
-            quickViewTitle.textContent = productData.dataset.name;
-            
-            // Set price with discount if available
-            if (productData.dataset.isDiscount === 'True') {
-                quickViewPrice.innerHTML = `<span class="original-price">$${productData.dataset.price}</span> $${productData.dataset.discountPrice}`;
-            } else {
-                quickViewPrice.innerHTML = `$${productData.dataset.price}`;
-            }
-            
-            quickViewDescription.textContent = productData.dataset.description;
-            quickViewImage.src = productImage;
-            
-            // Show stock information
-            const stockCount = parseInt(productData.dataset.stock);
-            if (stockCount > 10) {
-                quickViewStock.innerHTML = `<i class="fas fa-check-circle text-success"></i> In Stock (${stockCount} available)`;
-            } else if (stockCount > 0) {
-                quickViewStock.innerHTML = `<i class="fas fa-exclamation-circle text-warning"></i> Low Stock (Only ${stockCount} left)`;
-            } else {
-                quickViewStock.innerHTML = `<i class="fas fa-times-circle text-danger"></i> Out of Stock`;
-            }
-            
-            // Show artisan information if available
-            if (productData.dataset.artisan) {
-                quickViewArtisan.innerHTML = `<small class="text-muted">Crafted by: ${productData.dataset.artisan} (${productData.dataset.artisanType})</small>`;
-            } else {
-                quickViewArtisan.innerHTML = '';
-            }
-            
-            // Set the product ID and price for the Add to Cart button
-            quickViewAddToCart.setAttribute('data-product-id', productId);
-            quickViewAddToCart.setAttribute('data-product-name', productData.dataset.name);
-            
-            // Set the correct price (discounted or regular)
-            const priceForCart = productData.dataset.isDiscount === 'True' ? 
-                productData.dataset.discountPrice : productData.dataset.price;
-            quickViewAddToCart.setAttribute('data-product-price', priceForCart);
-            
-            // Reset quantity
-            if (quickViewQuantity) {
-                quickViewQuantity.value = 1;
-            }
-            
-            // Setup quantity buttons
-            setupQuantityButtons();
-            
-            // Setup Add to Cart button
-            setupQuickViewAddToCart();
-            
-            // Setup Add to Wishlist button
-            setupQuickViewAddToWishlist();
-            
-            // Show the modal
-            const modal = new bootstrap.Modal(quickViewModal);
-            modal.show();
+        if (!productData) {
+            console.error(`Product data not found for product ID: ${productId}`);
+            showMessage('Error loading product details. Please try again.', 'danger');
+            return;
         }
+        
+        // Try to find the product card and image
+        let productImage = '';
+        const productCardElement = document.querySelector(`[data-product-id="${productId}"]`);
+        
+        if (productCardElement) {
+            const productCard = productCardElement.closest('.product-card');
+            if (productCard && productCard.querySelector('img')) {
+                productImage = productCard.querySelector('img').src;
+            }
+        }
+        
+        // If we couldn't find the image, use a placeholder
+        if (!productImage) {
+            productImage = '/static/images/product.png';
+        }
+        
+        // Set modal content from data attributes
+        quickViewTitle.textContent = productData.dataset.name;
+        
+        // Set price with discount if available
+        if (productData.dataset.isDiscount === 'True') {
+            quickViewPrice.innerHTML = `<span class="original-price">$${productData.dataset.price}</span> $${productData.dataset.discountPrice}`;
+        } else {
+            quickViewPrice.innerHTML = `$${productData.dataset.price}`;
+        }
+        
+        quickViewDescription.textContent = productData.dataset.description;
+        quickViewImage.src = productImage;
+        
+        // Show stock information
+        const stockCount = parseInt(productData.dataset.stock);
+        if (stockCount > 10) {
+            quickViewStock.innerHTML = `<i class="fas fa-check-circle text-success"></i> In Stock (${stockCount} available)`;
+        } else if (stockCount > 0) {
+            quickViewStock.innerHTML = `<i class="fas fa-exclamation-circle text-warning"></i> Low Stock (Only ${stockCount} left)`;
+        } else {
+            quickViewStock.innerHTML = `<i class="fas fa-times-circle text-danger"></i> Out of Stock`;
+        }
+        
+        // Show artisan information if available
+        if (productData.dataset.artisan) {
+            quickViewArtisan.innerHTML = `<small class="text-muted">Crafted by: ${productData.dataset.artisan} (${productData.dataset.artisanType})</small>`;
+        } else {
+            quickViewArtisan.innerHTML = '';
+        }
+        
+        // Set the product ID and price for the Add to Cart button
+        quickViewAddToCart.setAttribute('data-product-id', productId);
+        quickViewAddToCart.setAttribute('data-product-name', productData.dataset.name);
+        
+        // Set the correct price (discounted or regular)
+        const priceForCart = productData.dataset.isDiscount === 'True' ? 
+            productData.dataset.discountPrice : productData.dataset.price;
+        quickViewAddToCart.setAttribute('data-product-price', priceForCart);
+        
+        // Reset quantity
+        if (quickViewQuantity) {
+            quickViewQuantity.value = 1;
+        }
+        
+        // Setup quantity buttons
+        setupQuantityButtons();
+        
+        // Setup Add to Cart button
+        setupQuickViewAddToCart();
+        
+        // Setup Add to Wishlist button
+        setupQuickViewAddToWishlist();
+        
+        // Show the modal
+        const modal = new bootstrap.Modal(quickViewModal);
+        modal.show();
     }
     
     // Setup Quick View Add to Cart Button
@@ -822,4 +805,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize wishlist
     initWishlist();
+    
+    // Handle pagination with AJAX
+    function initPaginationLinks() {
+        const paginationLinks = document.querySelectorAll('.pagination .page-link:not([aria-disabled="true"])');
+        
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the URL from the link
+                const url = this.href;
+                
+                // Show loading indicator
+                const productGrid = document.getElementById('productGrid');
+                productGrid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+                
+                // Make a full page request (not AJAX) to get the complete HTML
+                window.location.href = url;
+            });
+        });
+    }
+    
+    // Initialize pagination links
+    initPaginationLinks();
 }); 

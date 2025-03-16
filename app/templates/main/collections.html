@@ -95,7 +95,7 @@
             <div class="col-lg-9">
                 <div class="sorting-container d-flex justify-content-between align-items-center mb-4">
                     <div class="showing-results">
-                        Showing <span id="productCount">{{ products|length }}</span> products
+                        Showing <span id="productCount">{{ products|length }}</span> of {{ products.paginator.count }} products
                     </div>
                     <div class="sort-options d-flex align-items-center">
                         <label for="sortSelect" class="me-2">Sort by:</label>
@@ -117,15 +117,45 @@
                 <!-- Pagination -->
                 <nav class="mt-5">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        {% if products.has_previous %}
                         <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
+                            <a class="page-link" href="?page={{ products.previous_page_number }}{% for category_item in current_filters.category %}&category={{ category_item }}{% endfor %}{% for artisan_item in current_filters.artisan %}&artisan={{ artisan_item }}{% endfor %}{% if current_filters.min_price %}&min_price={{ current_filters.min_price }}{% endif %}{% if current_filters.max_price %}&max_price={{ current_filters.max_price }}{% endif %}{% if current_filters.sort_by %}&sort_by={{ current_filters.sort_by }}{% endif %}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span> Previous
+                            </a>
                         </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true">&laquo;</span> Previous
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for i in products.paginator.page_range %}
+                            {% if products.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link" href="#">{{ i }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}{% for category_item in current_filters.category %}&category={{ category_item }}{% endfor %}{% for artisan_item in current_filters.artisan %}&artisan={{ artisan_item }}{% endfor %}{% if current_filters.min_price %}&min_price={{ current_filters.min_price }}{% endif %}{% if current_filters.max_price %}&max_price={{ current_filters.max_price }}{% endif %}{% if current_filters.sort_by %}&sort_by={{ current_filters.sort_by }}{% endif %}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.next_page_number }}{% for category_item in current_filters.category %}&category={{ category_item }}{% endfor %}{% for artisan_item in current_filters.artisan %}&artisan={{ artisan_item }}{% endfor %}{% if current_filters.min_price %}&min_price={{ current_filters.min_price }}{% endif %}{% if current_filters.max_price %}&max_price={{ current_filters.max_price }}{% endif %}{% if current_filters.sort_by %}&sort_by={{ current_filters.sort_by }}{% endif %}" aria-label="Next">
+                                Next <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                Next <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>

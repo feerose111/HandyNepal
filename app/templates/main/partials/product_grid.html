@@ -7,7 +7,7 @@
      data-created="{{ product.created_at|date:'Y-m-d' }}"
      data-bestseller="{{ product.is_bestseller }}"
      data-featured="{{ product.is_featured }}"
-     data-description="{{ product.description }}">
+     data-product-id="{{ product.id }}">
     <div class="product-card">
         <div class="position-relative">
             {% if product.is_new %}
@@ -64,4 +64,7 @@
      data-is-discount="{{ product.is_discount }}"
      data-discount-percentage="{% if product.is_discount %}{{ product.discount_percentage }}{% endif %}">
 </div>
-{% endfor %} 
+{% endfor %}
+
+<!-- Include product count for AJAX pagination -->
+<span id="productCount" style="display: none;">{{ products|length }}</span> 
