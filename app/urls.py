@@ -15,4 +15,5 @@ urlpatterns = [
     path('payment/', payment, name='payment'),
     path('terms_and_conditions/', terms_and_conditions, name='terms_and_conditions'),
     path('privacy_policy/', privacy_policy, name='privacy_policy'),
+    path('user_logout/', user_logout, name='user_logout'),
 ]

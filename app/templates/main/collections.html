@@ -16,160 +16,210 @@
    </div>
 </div>
 
-<!-- Featured Collection -->
-<div class="featured-collection">
+<!-- Category Filter Section -->
+<div class="filter-section">
     <div class="container">
-       <h2 class="section-title">Featured Collection: Festival Season</h2>
-       <p class="section-subtitle">Special items perfect for celebrating Dashain and Tihar festivals</p>
-       
-       <div class="row g-4 mt-4">
-          <div class="col-md-6">
-             <div class="featured-image">
-                <img src="{% static 'images/festival_collection.png' %}" alt="Festival Collection" onerror="this.src='https://via.placeholder.com/600x400?text=Festival+Collection'">
-             </div>
-          </div>
-          <div class="col-md-6">
-             <div class="featured-content">
-                <h3>Celebrate with Authentic Crafts</h3>
-                <p>Our festival collection features specially curated items that represent the rich cultural heritage of Nepal. Each piece is handcrafted with care and attention to detail, making them perfect gifts for loved ones during the festive season.</p>
-                <ul class="featured-list">
-                   <li><i class="fas fa-check-circle"></i> Traditional festival decorations</li>
-                   <li><i class="fas fa-check-circle"></i> Ceremonial items for rituals</li>
-                   <li><i class="fas fa-check-circle"></i> Special gift sets</li>
-                   <li><i class="fas fa-check-circle"></i> Limited edition pieces</li>
-                </ul>
-                <a href="{% url 'home' %}" class="btn-explore">Explore Festival Collection</a>
-             </div>
-          </div>
-       </div>
-    </div>
- </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="filter-container">
+                    <h4 class="filter-title">Categories</h4>
+                    <div class="filter-group">
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="checkbox" value="wood-crafts" id="woodCrafts">
+                            <label class="form-check-label" for="woodCrafts">
+                                Wood Crafts
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="checkbox" value="pottery" id="pottery">
+                            <label class="form-check-label" for="pottery">
+                                Pottery
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="checkbox" value="textiles" id="textiles">
+                            <label class="form-check-label" for="textiles">
+                                Textiles
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="checkbox" value="metal-works" id="metalWorks">
+                            <label class="form-check-label" for="metalWorks">
+                                Metal Works
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="checkbox" value="paper-crafts" id="paperCrafts">
+                            <label class="form-check-label" for="paperCrafts">
+                                Paper Crafts
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="checkbox" value="jewelry" id="jewelry">
+                            <label class="form-check-label" for="jewelry">
+                                Jewelry
+                            </label>
+                        </div>
+                    </div>
 
-<!-- Categories Section -->
-<div class="categories-section">
-   <div class="container">
-      <div class="row g-4">
-         <!-- Wood Crafts -->
-         <div class="col-md-6 col-lg-4">
-            <div class="category-card">
-               <div class="category-img-container">
-                  <img src="{% static 'images/wall_woodcraft.png' %}" alt="Wood Crafts" class="category-img">
-                  <div class="category-overlay">
-                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
-                  </div>
-               </div>
-               <div class="category-content">
-                  <h3 class="category-title">Wood Crafts</h3>
-                  <p class="category-desc">Intricately carved wooden artifacts showcasing traditional Nepalese craftsmanship.</p>
-                  <div class="category-meta">
-                     <span><i class="fas fa-box"></i> 24 Products</span>
-                     <span><i class="fas fa-user-alt"></i> 5 Artisans</span>
-                  </div>
-               </div>
+                    <h4 class="filter-title mt-4">Price Range</h4>
+                    <div class="filter-group">
+                        <div class="price-slider-container">
+                            <div class="price-range">
+                                <span id="priceMin">$0</span>
+                                <span id="priceMax">$200</span>
+                            </div>
+                            <input type="range" class="form-range" min="0" max="200" step="10" id="priceRange">
+                        </div>
+                    </div>
+
+                    <h4 class="filter-title mt-4">Artisan</h4>
+                    <div class="filter-group">
+                        <div class="form-check">
+                            <input class="form-check-input artisan-filter" type="checkbox" value="ram-bahadur" id="ramBahadur">
+                            <label class="form-check-label" for="ramBahadur">
+                                Ram Bahadur
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input artisan-filter" type="checkbox" value="sita-sharma" id="sitaSharma">
+                            <label class="form-check-label" for="sitaSharma">
+                                Sita Sharma
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input artisan-filter" type="checkbox" value="krishna-tamang" id="krishnaTamang">
+                            <label class="form-check-label" for="krishnaTamang">
+                                Krishna Tamang
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-100 mt-4" id="applyFilters">Apply Filters</button>
+                    <button class="btn btn-outline-secondary w-100 mt-2" id="clearFilters">Clear All</button>
+                </div>
             </div>
-         </div>
-         
-         <!-- Pottery -->
-         <div class="col-md-6 col-lg-4">
-            <div class="category-card">
-               <div class="category-img-container">
-                  <img src="{% static 'images/claypot.png' %}" alt="Pottery" class="category-img">
-                  <div class="category-overlay">
-                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
-                  </div>
-               </div>
-               <div class="category-content">
-                  <h3 class="category-title">Pottery</h3>
-                  <p class="category-desc">Handcrafted ceramic and clay items made using traditional techniques.</p>
-                  <div class="category-meta">
-                     <span><i class="fas fa-box"></i> 18 Products</span>
-                     <span><i class="fas fa-user-alt"></i> 4 Artisans</span>
-                  </div>
-               </div>
+            
+            <div class="col-lg-9">
+                <div class="sorting-container d-flex justify-content-between align-items-center mb-4">
+                    <div class="showing-results">
+                        Showing <span id="productCount">{{ products|length }}</span> products
+                    </div>
+                    <div class="sort-options d-flex align-items-center">
+                        <label for="sortSelect" class="me-2">Sort by:</label>
+                        <select class="form-select" id="sortSelect">
+                            <option value="featured">Featured</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="newest">Newest</option>
+                            <option value="bestselling">Best Selling</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="row g-4" id="productGrid">
+                    {% include "main/partials/product_grid.html" %}
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-         </div>
-         
-         <!-- Textiles -->
-         <div class="col-md-6 col-lg-4">
-            <div class="category-card">
-               <div class="category-img-container">
-                  <img src="{% static 'images/nepalese_shawl.png' %}" alt="Textiles" class="category-img">
-                  <div class="category-overlay">
-                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
-                  </div>
-               </div>
-               <div class="category-content">
-                  <h3 class="category-title">Textiles</h3>
-                  <p class="category-desc">Handwoven fabrics, shawls, and garments featuring traditional patterns.</p>
-                  <div class="category-meta">
-                     <span><i class="fas fa-box"></i> 30 Products</span>
-                     <span><i class="fas fa-user-alt"></i> 7 Artisans</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Metal Works -->
-         <div class="col-md-6 col-lg-4">
-            <div class="category-card">
-               <div class="category-img-container">
-                  <img src="{% static 'images/metal_craft.png' %}" alt="Metal Works" class="category-img" onerror="this.src='https://via.placeholder.com/400x300?text=Metal+Works'">
-                  <div class="category-overlay">
-                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
-                  </div>
-               </div>
-               <div class="category-content">
-                  <h3 class="category-title">Metal Works</h3>
-                  <p class="category-desc">Exquisite metal crafts including singing bowls, statues, and decorative items.</p>
-                  <div class="category-meta">
-                     <span><i class="fas fa-box"></i> 22 Products</span>
-                     <span><i class="fas fa-user-alt"></i> 6 Artisans</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Paper Crafts -->
-         <div class="col-md-6 col-lg-4">
-            <div class="category-card">
-               <div class="category-img-container">
-                  <img src="{% static 'images/nepalese_paper.png' %}" alt="Paper Crafts" class="category-img" onerror="this.src='https://via.placeholder.com/400x300?text=Paper+Crafts'">
-                  <div class="category-overlay">
-                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
-                  </div>
-               </div>
-               <div class="category-content">
-                  <h3 class="category-title">Paper Crafts</h3>
-                  <p class="category-desc">Handmade Lokta paper products including journals, lamps, and art pieces.</p>
-                  <div class="category-meta">
-                     <span><i class="fas fa-box"></i> 15 Products</span>
-                     <span><i class="fas fa-user-alt"></i> 3 Artisans</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Jewelry -->
-         <div class="col-md-6 col-lg-4">
-            <div class="category-card">
-               <div class="category-img-container">
-                  <img src="{% static 'images/jewelry.png' %}" alt="Jewelry" class="category-img" onerror="this.src='https://via.placeholder.com/400x300?text=Jewelry'">
-                  <div class="category-overlay">
-                     <a href="{% url 'home' %}" class="btn-view-all">View All</a>
-                  </div>
-               </div>
-               <div class="category-content">
-                  <h3 class="category-title">Jewelry</h3>
-                  <p class="category-desc">Traditional and contemporary jewelry pieces handcrafted by skilled artisans.</p>
-                  <div class="category-meta">
-                     <span><i class="fas fa-box"></i> 28 Products</span>
-                     <span><i class="fas fa-user-alt"></i> 5 Artisans</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
 </div>
 
+<!-- Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickViewModalLabel">Product Quick View</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="quickViewImage" src="" class="img-fluid rounded" alt="Product Image">
+                    </div>
+                    <div class="col-md-6">
+                        <h3 id="quickViewTitle" class="mb-3"></h3>
+                        <div class="product-price mb-3" id="quickViewPrice"></div>
+                        <p id="quickViewDescription" class="mb-4"></p>
+                        
+                        <div class="mb-4">
+                            <label for="quickViewQuantity" class="form-label fw-bold">Quantity:</label>
+                            <div class="input-group quantity-control" style="width: 130px;">
+                                <button class="btn quantity-btn" type="button" id="decreaseQuantity">-</button>
+                                <input type="number" class="form-control text-center" id="quickViewQuantity" value="1" min="1">
+                                <button class="btn quantity-btn" type="button" id="increaseQuantity">+</button>
+                            </div>
+                        </div>
+                        
+                        <div id="quickViewStock" class="mb-3 text-muted"></div>
+                        <div id="quickViewArtisan" class="mb-3 fst-italic"></div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary w-100 mb-2" id="quickViewAddToCart">
+                                <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-outline-primary w-100" id="quickViewAddToWishlist">
+                                <i class="far fa-heart me-2"></i> Add to Wishlist
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Product Data for Quick View -->
+<div style="display: none;" id="product-data-container">
+    <!-- Product data will be loaded dynamically with the product grid -->
+</div>
+
+<!-- Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel">Shopping Cart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="cart-items">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+                <div class="cart-total mt-3 pt-3 border-top">
+                    <div class="d-flex justify-content-between">
+                        <span class="font-weight-bold">Total:</span>
+                        <span class="font-weight-bold" id="cart-total">$0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+                <a href="#" class="btn btn-primary">Checkout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/collections.js' %}?v={% now 'U' %}"></script>
 {% endblock %} 

@@ -31,25 +31,20 @@
                 </button>
                 
                 <div class="collapse navbar-collapse" id="navbarNav">
+                    {% if user.is_authenticated %}
                     <form class="search-form d-flex mx-auto" style="max-width: 500px;" action="{% url 'home' %}" method="get">
                         <input class="form-control me-2" type="search" placeholder="Search handcrafted products..." aria-label="Search" name="q">
                         <button class="btn btn-outline-warning" type="submit"><i class="fas fa-search"></i></button>
                     </form>
+                    {% endif %}
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link text-golden" href="{% url 'home' %}">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-golden" href="{% url 'collections' %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <li class="nav-item">
+                            <a class="nav-link text-golden" href="{% url 'collections' %}">
                                 Collections
                             </a>
-                            <ul class="dropdown-menu bg-dark">
-                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Wood Crafts</a></li>
-                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Pottery</a></li>
-                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Textiles</a></li>
-                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Metal Works</a></li>
-                                <li><a class="dropdown-item text-golden" href="{% url 'collections' %}">Paper Crafts</a></li>
-                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-golden" href="{% url 'artisans' %}">Artisans</a>
@@ -60,12 +55,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-golden" href="{% url 'contact' %}">Contact</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-golden" href="#"><i class="fas fa-shopping-cart"></i> <span class="badge bg-warning text-dark rounded-pill">0</span></a>
-                        </li>
+                        {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link text-golden" href="{% url 'user_dashboard' %}"><i class="fas fa-user"></i></a> 
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -145,13 +139,12 @@
                 <div class="col-md-6 text-center text-md-start ">
                     <p class="small text-muted">&copy; {% now "Y" %} HandyNepal. All rights reserved.</p>
                 </div>
-                <!-- <div class="col-md-6 text-center text-md-end">
-                    <img src="#" alt="Payment Methods" height="30" class="img-fluid" onerror="this.src='https://via.placeholder.com/200x30?text=Payment+Methods'">
-                </div> -->
             </div>
         </div>
     </footer>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JavaScript -->

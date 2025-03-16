@@ -6,17 +6,78 @@ from django.contrib import messages
 from django.http import JsonResponse
 from datetime import datetime
 from django.utils import timezone
-from .models import User , Contact # Import the custom User model
+from decimal import Decimal
+from .models import User, Contact, Artisan, Product# Import the custom User model and Order models
 # Create your views here.
 
 def home(request):
+    
     return render(request, 'main/home.html')
 
 def collections(request):
-    return render(request, 'main/collections.html')
+    # Get all products
+    products = Product.objects.all()
+    
+    # Get filter parameters from request
+    category = request.GET.getlist('category')
+    artisan = request.GET.getlist('artisan')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    sort_by = request.GET.get('sort_by')
+    is_ajax = request.GET.get('ajax') == 'true'
+    
+    # Apply filters if provided
+    if category:
+        products = products.filter(category__in=category)
+    
+    if artisan:
+        # Split artisan names and filter by first name
+        artisan_first_names = [a.split('-')[0] for a in artisan if '-' in a]
+        if artisan_first_names:
+            products = products.filter(artisan__first_name__icontains=artisan_first_names[0])
+    
+    if min_price:
+        try:
+            min_price = float(min_price)
+            products = products.filter(price__gte=min_price)
+        except (ValueError, TypeError):
+            pass
+    
+    if max_price:
+        try:
+            max_price = float(max_price)
+            products = products.filter(price__lte=max_price)
+        except (ValueError, TypeError):
+            pass
+    
+    # Apply sorting
+    if sort_by:
+        if sort_by == 'price-low':
+            products = products.order_by('price')
+        elif sort_by == 'price-high':
+            products = products.order_by('-price')
+        elif sort_by == 'newest':
+            products = products.order_by('-created_at')
+        elif sort_by == 'bestselling':
+            # First get bestsellers, then non-bestsellers
+            bestsellers = products.filter(is_bestseller=True)
+            non_bestsellers = products.filter(is_bestseller=False)
+            products = list(bestsellers) + list(non_bestsellers)
+        elif sort_by == 'featured':
+            # First get featured, then non-featured
+            featured = products.filter(is_featured=True)
+            non_featured = products.filter(is_featured=False)
+            products = list(featured) + list(non_featured)
+    
+    # If this is an AJAX request, render only the product grid
+    if is_ajax:
+        return render(request, 'main/partials/product_grid.html', {'products': products})
+    
+    return render(request, 'main/collections.html', {'products': products})
 
 def artisans(request):
-    return render(request, 'main/artisans.html')
+    artisan = Artisan.objects.all()
+    return render(request, 'main/artisans.html', {'artisan': artisan})
 
 def about(request):
     return render(request, 'main/about.html')
@@ -123,6 +184,11 @@ def user_login(request):
         return render(request, 'authentication/login.html')
     
     return render(request, 'authentication/login.html')
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully.')
+    return redirect('home')
 
 
 #help section

@@ -1,0 +1,67 @@
+{% load static %}
+{% for product in products %}
+<div class="col-6 col-md-4 product-item" 
+     data-category="{{ product.category }}" 
+     data-price="{{ product.get_display_price }}" 
+     data-artisan="{% if product.artisan %}{{ product.artisan.first_name|lower }}-{{ product.artisan.last_name|lower }}{% else %}unknown{% endif %}"
+     data-created="{{ product.created_at|date:'Y-m-d' }}"
+     data-bestseller="{{ product.is_bestseller }}"
+     data-featured="{{ product.is_featured }}"
+     data-description="{{ product.description }}">
+    <div class="product-card">
+        <div class="position-relative">
+            {% if product.is_new %}
+                <span class="new-badge">New</span>
+            {% elif product.is_discount %}
+                <span class="discount-badge">-{{ product.discount_percentage }}% off</span>
+            {% endif %}
+
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <img src="{% static 'images/product.png' %}" class="card-img-top" alt="{{ product.name }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ product.name|urlencode }}'">
+            {% endif %}
+            <div class="product-actions">
+                <button class="btn-action btn-wishlist" data-product-id="{{ product.id }}"><i class="far fa-heart"></i></button>
+                <button class="btn-action btn-quickview" data-product-id="{{ product.id }}"><i class="far fa-eye"></i></button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="product-category">{{ product.get_category_display_name }}</div>
+            <h5 class="card-title">{{ product.name }}</h5>
+            <div class="product-price">
+                {% if product.is_discount %}
+                <span class="original-price">${{ product.price }}</span>
+                {% endif %}
+                ${{ product.get_display_price }}
+            </div>
+            <button class="btn btn-outline-primary w-100 add-to-cart-btn" 
+                    data-product-id="{{ product.id }}" 
+                    data-product-name="{{ product.name }}" 
+                    data-product-price="{{ product.get_display_price }}">Add to Cart</button>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="col-12 text-center py-5">
+    <h3>No products found</h3>
+    <p>Try adjusting your filters or check back later for new products.</p>
+</div>
+{% endfor %}
+
+<!-- Hidden Product Data for Quick View -->
+{% for product in products %}
+<div id="product-data-{{ product.id }}" class="hidden-product-data"
+     data-name="{{ product.name }}"
+     data-price="{{ product.price }}"
+     data-discount-price="{% if product.discount_price %}{{ product.discount_price }}{% endif %}"
+     data-description="{{ product.description }}"
+     data-category="{{ product.get_category_display_name }}"
+     data-stock="{{ product.stock }}"
+     data-artisan="{% if product.artisan %}{{ product.artisan.first_name }} {{ product.artisan.last_name }}{% endif %}"
+     data-artisan-type="{% if product.artisan %}{{ product.artisan.get_artisan_type_display }}{% endif %}"
+     data-is-new="{{ product.is_new }}"
+     data-is-discount="{{ product.is_discount }}"
+     data-discount-percentage="{% if product.is_discount %}{{ product.discount_percentage }}{% endif %}">
+</div>
+{% endfor %} 
