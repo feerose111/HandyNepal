@@ -8,6 +8,7 @@ from datetime import datetime
 from django.utils import timezone
 from decimal import Decimal
 from .models import User, Contact, Artisan, Product# Import the custom User model and Order models
+from django.core.paginator import Paginator
 # Create your views here.
 
 def home(request):
@@ -17,6 +18,8 @@ def home(request):
 def collections(request):
     # Get all products
     products = Product.objects.all()
+    # Get all artisans for the filter
+    all_artisans = Artisan.objects.all()
     
     # Get filter parameters from request
     category = request.GET.getlist('category')
@@ -73,11 +76,11 @@ def collections(request):
     if is_ajax:
         return render(request, 'main/partials/product_grid.html', {'products': products})
     
-    return render(request, 'main/collections.html', {'products': products})
+    return render(request, 'main/collections.html', {'products': products, 'all_artisans': all_artisans})
 
 def artisans(request):
-    artisan = Artisan.objects.all()
-    return render(request, 'main/artisans.html', {'artisan': artisan})
+    artisans = Artisan.objects.all()
+    return render(request, 'main/artisans.html', {'artisans': artisans})
 
 def about(request):
     return render(request, 'main/about.html')

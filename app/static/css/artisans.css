@@ -456,4 +456,116 @@
     .support-image img {
         height: 250px;
     }
+}
+
+/* Artisan Carousel Styling */
+#artisanCarousel {
+    margin-bottom: 60px;
+    padding: 20px 0;
+}
+
+#artisanCarousel .carousel-inner {
+    padding: 20px 0;
+}
+
+#artisanCarousel .carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+#artisanCarousel .carousel-control-prev,
+#artisanCarousel .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+}
+
+#artisanCarousel .carousel-control-prev {
+    left: -10px;
+}
+
+#artisanCarousel .carousel-control-next {
+    right: -10px;
+}
+
+#artisanCarousel .carousel-control-prev:hover,
+#artisanCarousel .carousel-control-next:hover {
+    opacity: 1;
+    background-color: var(--dark-color);
+}
+
+#artisanCarousel .carousel-indicators {
+    bottom: -40px;
+}
+
+#artisanCarousel .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    opacity: 0.5;
+    margin: 0 5px;
+}
+
+#artisanCarousel .carousel-indicators button.active {
+    opacity: 1;
+    background-color: var(--secondary-color);
+}
+
+/* Responsive adjustments for the carousel */
+@media (max-width: 991.98px) {
+    #artisanCarousel .col-md-4 {
+        margin-bottom: 20px;
+    }
+    
+    #artisanCarousel .carousel-control-prev {
+        left: 0;
+    }
+    
+    #artisanCarousel .carousel-control-next {
+        right: 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    #artisanCarousel .carousel-item .row {
+        justify-content: center;
+    }
+    
+    #artisanCarousel .col-md-4 {
+        width: 80%;
+        margin: 0 auto 20px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    #artisanCarousel .col-md-4 {
+        width: 100%;
+    }
+    
+    #artisanCarousel .carousel-control-prev,
+    #artisanCarousel .carousel-control-next {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* View All Artisans Button */
+.featured-artisans .btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: all 0.3s;
+}
+
+.featured-artisans .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 } 
