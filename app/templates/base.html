@@ -60,6 +60,14 @@
                             <a class="nav-link text-golden" href="{% url 'user_dashboard' %}"><i class="fas fa-user"></i></a> 
                         </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link text-golden" href="{% url 'cart' %}">
+                                <i class="fas fa-shopping-cart"></i>
+                                {% if request.session.cart %}
+                                <span class="badge bg-warning cart-count">{{ request.session.cart|length }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -72,27 +72,27 @@
                   {% for artisan in artisans|slice:":3" %}
                   <div class="col-md-4">
                      <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal{{ artisan.id }}">
-                        <div class="artisan-img-container">
-                           {% if artisan.image %}
+               <div class="artisan-img-container">
+                  {% if artisan.image %}
                            <img src="{{ artisan.image.url }}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}">
-                           {% else %}
+                  {% else %}
                            <img src="{% static 'images/artisan.png' %}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ artisan.first_name|urlencode }}+{{ artisan.last_name|urlencode }}'">
-                           {% endif %}
-                           <div class="artisan-overlay">
-                              <span class="btn-view-profile">View Profile</span>
-                           </div>
-                        </div>
-                        <div class="artisan-content">
+                  {% endif %}
+                  <div class="artisan-overlay">
+                     <span class="btn-view-profile">View Profile</span>
+                  </div>
+               </div>
+               <div class="artisan-content">
                            <h3 class="artisan-name">{{ artisan.first_name }} {{ artisan.last_name }}</h3>
                            <p class="artisan-specialty">{{ artisan.get_artisan_type_display }}</p>
                            <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> {{ artisan.location }}</p>
-                           <div class="artisan-skills">
+                  <div class="artisan-skills">
                               <span>{{ artisan.get_artisan_type_display }}</span>
-                           </div>
-                        </div>
-                     </div>
                   </div>
-                  {% endfor %}
+               </div>
+            </div>
+         </div>
+         {% endfor %}
                </div>
             </div>
             

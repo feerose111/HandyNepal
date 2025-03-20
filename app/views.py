@@ -1,5 +1,5 @@
 import re
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -9,6 +9,7 @@ from django.utils import timezone
 from decimal import Decimal
 from .models import User, Contact, Artisan, Product# Import the custom User model and Order models
 from django.core.paginator import Paginator
+import uuid
 # Create your views here.
 
 def home(request):
@@ -17,81 +18,53 @@ def home(request):
 
 def collections(request):
     # Get all products
-    products_list = Product.objects.all()
-    # Get all artisans for the filter
-    all_artisans = Artisan.objects.all()
+    products = Product.objects.all()
     
-    # Get filter parameters from request
-    category = request.GET.getlist('category')
-    artisan = request.GET.getlist('artisan')
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-    sort_by = request.GET.get('sort_by')
-    
-    # Apply filters if provided
+    # Filter by category if specified
+    category = request.GET.get('category')
     if category:
-        products_list = products_list.filter(category__in=category)
+        products = products.filter(category=category)
     
-    if artisan:
-        # Split artisan names and filter by first name
-        artisan_first_names = [a.split('-')[0] for a in artisan if '-' in a]
-        if artisan_first_names:
-            products_list = products_list.filter(artisan__first_name__icontains=artisan_first_names[0])
-    
-    if min_price:
-        try:
-            min_price = float(min_price)
-            products_list = products_list.filter(price__gte=min_price)
-        except (ValueError, TypeError):
-            pass
-    
-    if max_price:
-        try:
-            max_price = float(max_price)
-            products_list = products_list.filter(price__lte=max_price)
-        except (ValueError, TypeError):
-            pass
-    
-    # Apply sorting
-    if sort_by:
-        if sort_by == 'price-low':
-            products_list = products_list.order_by('price')
-        elif sort_by == 'price-high':
-            products_list = products_list.order_by('-price')
-        elif sort_by == 'newest':
-            products_list = products_list.order_by('-created_at')
-        elif sort_by == 'bestselling':
-            # First get bestsellers, then non-bestsellers
-            bestsellers = products_list.filter(is_bestseller=True)
-            non_bestsellers = products_list.filter(is_bestseller=False)
-            products_list = list(bestsellers) + list(non_bestsellers)
-        elif sort_by == 'featured':
-            # First get featured, then non-featured
-            featured = products_list.filter(is_featured=True)
-            non_featured = products_list.filter(is_featured=False)
-            products_list = list(featured) + list(non_featured)
+    # Sort products based on user selection
+    sort = request.GET.get('sort', 'newest')  # Default sort by newest
+    if sort == 'newest':
+        products = products.order_by('-is_new', '-created_at')
+    elif sort == 'price_low':
+        products = products.order_by('price')
+    elif sort == 'price_high':
+        products = products.order_by('-price')
+    elif sort == 'name_asc':
+        products = products.order_by('name')
+    elif sort == 'name_desc':
+        products = products.order_by('-name')
     
     # Pagination
-    page = request.GET.get('page', 1)
-    products_per_page = 3
-    paginator = Paginator(products_list, products_per_page)
-    
     try:
-        products = paginator.page(page)
-    except:
-        products = paginator.page(1)
+        page = int(request.GET.get('page', 1))
+    except (ValueError, TypeError):
+        page = 1
     
-    return render(request, 'main/collections.html', {
-        'products': products, 
-        'all_artisans': all_artisans,
-        'current_filters': {
-            'category': category,
-            'artisan': artisan,
-            'min_price': min_price,
-            'max_price': max_price,
-            'sort_by': sort_by
-        }
-    })
+    # Ensure page is never less than 1
+    if page < 1:
+        page = 1
+    
+    items_per_page = 6
+    paginator = Paginator(products, items_per_page)
+    
+    # Get the page, handling case where page is out of range
+    try:
+        products_paginated = paginator.page(page)
+    except:
+        # If page is out of range, deliver last page
+        products_paginated = paginator.page(paginator.num_pages)
+    
+    context = {
+        'products': products_paginated,
+        'items_per_page': items_per_page,
+        'total_products': len(products),
+    }
+    
+    return render(request, 'main/collections.html', context)
 
 def artisans(request):
     artisans = Artisan.objects.all()
@@ -226,6 +199,184 @@ def terms_and_conditions(request):
 def privacy_policy(request):
     return render(request, 'help/privacy_policy.html')
 
+def payment_portal(request):
+    cart_items = []
+    total = 0
+    item_count = 0
+    tax_amount = 10 
+    
+    if 'cart' in request.session:
+        cart = request.session['cart']
+        for product_id, item_data in cart.items():
+            product = get_object_or_404(Product, id=product_id)
+            quantity = item_data['quantity']
+            
+            # Calculate price based on whether there's a discount
+            if product.is_discount and product.discount_price:
+                price = float(product.discount_price)
+            else:
+                price = float(product.price)
+                
+            item_total = price * quantity 
+            total += item_total
+            item_count += quantity
+            
+            item = {
+                'id': product_id,
+                'name': product.name,
+                'product': product,
+                'quantity': quantity,
+                'price': price,
+                'total': item_total
+            }
+            cart_items.append(item)
+    
+    # Calculate tax amount (if applicable) - adjust as needed
+    
+    
+    # Calculate total amount including tax and delivery
+    total_amount = total + tax_amount
+    
+    transaction_uuid = str(uuid.uuid4())
+    
+    
+    
+    context = {
+        'cart_items': cart_items,
+        'cart_total': total,
+        'total': total,
+        'item_count': item_count,
+        'tax_amount': tax_amount,
+        'total_amount': total_amount,
+        'transaction_uuid': transaction_uuid,
+    }
+    
+    return render(request, 'payment/payment_portal.html', context)
 
+# Cart Views
+def cart(request):
+    """View to display the cart contents"""
+    cart_items = []
+    total = 0
+    item_count = 0
+    
+    if 'cart' in request.session:
+        cart = request.session['cart']
+        for product_id, item_data in cart.items():
+            product = get_object_or_404(Product, id=product_id)
+            quantity = item_data['quantity']
+            
+            # Calculate price based on whether there's a discount
+            if product.is_discount and product.discount_price:
+                price = float(product.discount_price)
+            else:
+                price = float(product.price)
+                
+            item_total = price * quantity
+            total += item_total
+            item_count += quantity
+            
+            cart_items.append({
+                'id': product_id,
+                'product': product,
+                'quantity': quantity,
+                'price': price,
+                'total': item_total
+            })
+    
+    # Format total to 2 decimal places
+    total = round(total, 2)
+    
+    context = {
+        'cart_items': cart_items,
+        'total': total,
+        'item_count': item_count
+    }
+    
+    return render(request, 'Cart/cart.html' , context)
 
+def add_to_cart(request):
+    """Add a product to the cart"""
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+        
+        # Get the product to check if it exists and has enough stock
+        product = get_object_or_404(Product, id=product_id)
+        
+        # Check if product has enough stock
+        if product.stock < quantity:
+            messages.error(request, f"Sorry, we only have {product.stock} of this item in stock.")
+            return redirect('collections')
+        
+        # Initialize the cart if it doesn't exist
+        if 'cart' not in request.session:
+            request.session['cart'] = {}
+            
+        cart = request.session['cart']
+        
+        # Add product to cart or update quantity if already in cart
+        if product_id in cart:
+            # Check if the new total quantity exceeds stock
+            new_quantity = cart[product_id]['quantity'] + quantity
+            if new_quantity > product.stock:
+                messages.error(request, f"Cannot add more. You already have {cart[product_id]['quantity']} in your cart and we only have {product.stock} in stock.")
+                return redirect('collections')
+            cart[product_id]['quantity'] = new_quantity
+        else:
+            cart[product_id] = {'quantity': quantity}
+            
+        request.session.modified = True
+        messages.success(request, f"{product.name} added to your cart!")
+        
+        return redirect('cart')
+    
+    return redirect('collections')
+
+def update_cart(request):
+    """Update quantity of an item in the cart"""
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+        
+        if quantity < 1:
+            messages.error(request, "Quantity must be at least 1")
+            return redirect('cart')
+            
+        # Get the product to check stock
+        product = get_object_or_404(Product, id=product_id)
+        
+        # Check if product has enough stock
+        if product.stock < quantity:
+            messages.error(request, f"Sorry, we only have {product.stock} of this item in stock.")
+            return redirect('cart')
+            
+        # Update cart if it exists
+        if 'cart' in request.session:
+            cart = request.session['cart']
+            if product_id in cart:
+                cart[product_id]['quantity'] = quantity
+                request.session.modified = True
+                messages.success(request, "Cart updated successfully!")
+            
+        return redirect('cart')
+    
+    return redirect('collections')
+
+def remove_from_cart(request):
+    """Remove an item from the cart"""
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        
+        if 'cart' in request.session:
+            cart = request.session['cart']
+            if product_id in cart:
+                product = get_object_or_404(Product, id=product_id)
+                del cart[product_id]
+                request.session.modified = True
+                messages.success(request, f"{product.name} removed from your cart!")
+                
+        return redirect('cart')
+    
+    return redirect('collections')
 

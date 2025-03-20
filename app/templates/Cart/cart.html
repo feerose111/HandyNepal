@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Cart - HandyNepal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/collections.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Cart Header -->
+<section class="cart-header">
+    <div class="container">
+        <h1 class="cart-title">Your Shopping Cart</h1>
+        <p class="cart-description">Review your items, update quantities, or proceed to checkout</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="cart-container">
+        {% if cart_items %}
+            <h2 class="mb-4">Cart Items ({{ item_count }})</h2>
+            
+            {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                            <img src="{% static 'images/placeholder-product.jpg' %}" alt="{{ item.product.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title">{{ item.product.name }}</h3>
+                        <p class="cart-item-meta">{{ item.product.get_category_display_name }}</p>
+                        {% if item.product.artisan %}
+                            <p class="cart-item-meta">By {{ item.product.artisan }}</p>
+                        {% endif %}
+                        <p class="cart-item-price">${{ item.price }} per item</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <form method="post" action="{% url 'update_cart' %}" class="cart-quantity-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.id }}">
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="quantity-input">
+                            <button type="submit" class="update-qty-btn">Update</button>
+                        </form>
+                    </div>
+                    <div>
+                        <form method="post" action="{% url 'remove_from_cart' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.id }}">
+                            <button type="submit" class="remove-item-btn">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <div class="continue-shopping-container mt-4">
+                <a href="{% url 'collections' %}" class="continue-shopping-link">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+            </div>
+            
+            <!-- Order Summary (at bottom) -->
+            <div class="order-summary mt-4">
+                <h3>Order Summary</h3>
+                
+                <div class="cart-total">
+                    <span>Subtotal</span>
+                    <span>${{ total }}</span>
+                </div>
+                
+                <div class="cart-total">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                
+                <div class="cart-total grand-total">
+                    <span>Total</span>
+                    <span>${{ total }}</span>
+                </div>
+                
+                <form method="get" action="{% url 'payment_portal' %}">
+                    <button type="submit" class="checkout-btn">
+                        Proceed to Checkout
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty</p>
+                <a href="{% url 'collections' %}" class="continue-shopping-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
