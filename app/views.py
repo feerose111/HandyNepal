@@ -3,17 +3,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest , HttpResponse
 from datetime import datetime
 from django.utils import timezone
 from decimal import Decimal
 from .models import User, Contact, Artisan, Product# Import the custom User model and Order models
 from django.core.paginator import Paginator
 import uuid
+import json, requests
+import os
 # Create your views here.
 
 def home(request):
-    
     return render(request, 'main/home.html')
 
 def collections(request):
@@ -48,7 +49,7 @@ def collections(request):
     if page < 1:
         page = 1
     
-    items_per_page = 6
+    items_per_page = 4
     paginator = Paginator(products, items_per_page)
     
     # Get the page, handling case where page is out of range
@@ -203,7 +204,6 @@ def payment_portal(request):
     cart_items = []
     total = 0
     item_count = 0
-    tax_amount = 10 
     
     if 'cart' in request.session:
         cart = request.session['cart']
@@ -231,27 +231,58 @@ def payment_portal(request):
             }
             cart_items.append(item)
     
-    # Calculate tax amount (if applicable) - adjust as needed
+    total_amount = int(total  * 100) #converting rupees to paisa
+     
     
-    
-    # Calculate total amount including tax and delivery
-    total_amount = total + tax_amount
-    
-    transaction_uuid = str(uuid.uuid4())
-    
-    
+    payURL = 'https://dev.khalti.com/api/v2/'
+    uid = str(uuid.uuid4())
+    print(uid)
     
     context = {
         'cart_items': cart_items,
-        'cart_total': total,
+        'payURL': payURL,
         'total': total,
         'item_count': item_count,
-        'tax_amount': tax_amount,
         'total_amount': total_amount,
-        'transaction_uuid': transaction_uuid,
+        'uid': uid,
     }
     
     return render(request, 'payment/payment_portal.html', context)
+def initialize_payment(request):
+    url = "https://a.khalti.com/api/v2/epayment/initiate/"
+    return_url = request.POST.get('return_url')
+    website_url = request.POST.get('return_url')
+    amount = request.POST.get('amount')
+    purchase_order_id = request.POST.get('purchase_order_id')
+    
+    print(website_url)
+    
+    payload = json.dumps({
+        "return_url": return_url,
+        "website_url": website_url,
+        "amount": amount,
+        "purchase_order_id": purchase_order_id,
+        "purchase_order_name": "test",
+        "customer_info": {
+        "name": "Handy Nepal",
+        "email": "mew04804@gmail.com",
+        "phone": "9800000001"
+        }
+    })
+    
+    headers = {
+        'Authorization': 'key 5987730274304f0ab7d099a9e9528e05',
+        'Content-Type': 'application/json',
+    }
+    
+    response = requests.request("POST", url, headers=headers, data=payload)
+    new_res = json.loads(response.text)
+    print(new_res)
+    return redirect(new_res['payment_url'])
+    return redirect('payment_portal')
+
+def verify(request):
+    return render(request, 'payment/payment_portal.html')
 
 # Cart Views
 def cart(request):
@@ -379,4 +410,3 @@ def remove_from_cart(request):
         return redirect('cart')
     
     return redirect('collections')
-

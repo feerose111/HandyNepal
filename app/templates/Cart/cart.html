@@ -83,7 +83,8 @@
                     <span>${{ total }}</span>
                 </div>
                 
-                <form method="get" action="{% url 'payment_portal' %}">
+                <form method="post" action="{% url 'payment_portal' %}">
+                    {% csrf_token %}
                     <button type="submit" class="checkout-btn">
                         Proceed to Checkout
                     </button>

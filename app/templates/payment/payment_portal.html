@@ -25,7 +25,7 @@
 
                     <div class="cart-total">
                         <span>Subtotal</span>
-                        <span>${{ total }}</span>
+                        <span>${{ total|floatformat:2 }}</span>
                     </div>
                     
                     <div class="cart-total">
@@ -34,59 +34,39 @@
                     </div>
                     <div class="cart-total">
                         <span>Tax</span>
-                        <span>${{ tax_amount }}</span>
+                        <span>0</span>
                     </div>
                     
                     <div class="cart-total grand-total">
                         <span>Total</span>
-                        <span>${{ total_amount }}</span>
+                        <span>${{ total }}</span>
                     </div>
             </div>
             
             <!-- Payment Form -->
-            <form id="payment-form" method="POST" action="http://rc-epay.esewa.com.np/api/epay/main/v2/form">
+            <form action="{% url 'initialize_payment' %}" method="POST">
                 {% csrf_token %}
-                
-                <!-- Personal Information -->
-                <div class="form-section">
-                    <h4>Personal Information</h4>
-                    <div class="form-group">
-                        <label for="username">Full Name</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                </div>
 
-                <!-- Delivery Address -->
+                <input type="hidden" id="purchase_order_id" name="purchase_order_id" value="{{uid}}">
+                <input type="hidden" id="amount" name="amount" value="{{total_amount}}">
+                <input type="hidden" id="return_url" name="return_url" value="http://127.0.0.1:8000/verify">
+                <!-- Delivery Address 
                 <div class="form-section">
                     <h4>Delivery Address</h4>
                     <div class="form-group">
                         <label for="address">Complete Address</label>
                         <textarea id="address" name="address" rows="3" required></textarea>
                     </div>
-                </div>
+                </div>-->
+            
 
-                <!-- Hidden Payment Fields -->
-                <div class="form-section">
-                    <input type="text" id="amount" name="amount" value="{{cart_total}}">
-                    <input type="text" id="tax_amount" name="tax_amount" value="10">
-                    <input type="text" id="total_amount" name="total_amount" value="{{total_amount}}">
-                    <input type="text" id="transaction_uuid" name="transaction_uuid" value="{{transaction_uuid}}">
-                    <input type="text" id="product_code" name="product_code" value="EPAYTEST">
-                    <input type="text" id="product_service_charge" name="product_service_charge" value="0">
-                    <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0">
-                    <input type="text" id="success_url" name="success_url" value="https://developer.esewa.com.np/success">
-                    <input type="text" id="failure_url" name="failure_url" value="https://google.com">
-                    <input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code">
-                    <input type="text" id="signature" name="signature" value="{{signature}}">
-                </div>
-
-                <!-- Terms and Conditions -->
+                <!-- Terms and Conditions 
                 <div class="terms-container">
                     <label class="terms-label">
                         <input type="checkbox" id="termsCheck" required>
                         <span>I agree to the <a href="#" target="_blank">Terms and Conditions</a></span>
                     </label>
-                </div>
+                </div>-->
 
                 <!-- Submit Button -->
                 <button type="submit" class="checkout-btn">
