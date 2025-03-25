@@ -49,24 +49,30 @@
 
                 <input type="hidden" id="purchase_order_id" name="purchase_order_id" value="{{uid}}">
                 <input type="hidden" id="amount" name="amount" value="{{total_amount}}">
-                <input type="hidden" id="return_url" name="return_url" value="http://127.0.0.1:8000/verify">
-                <!-- Delivery Address 
+                <input type="hidden" id="return_url" name="return_url" value="http://127.0.0.1:8000/payment/verify">
+
+                <!-- Customer Information -->
+                <input type="hidden" id="full_name" name="full_name" value="{% if user.is_authenticated %}{{ user.full_name }}{% endif %}" required>
+                <input type="hidden" id="email" name="email" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required>
+                <input type="hidden" id="phone" name="phone" value="{% if user.is_authenticated %}{{ user.phone_number }}{% endif %}" required>
+
+                <!-- Delivery Address-->
                 <div class="form-section">
                     <h4>Delivery Address</h4>
                     <div class="form-group">
                         <label for="address">Complete Address</label>
                         <textarea id="address" name="address" rows="3" required></textarea>
                     </div>
-                </div>-->
+                </div>
             
 
-                <!-- Terms and Conditions 
+                <!-- Terms and Conditions -->
                 <div class="terms-container">
                     <label class="terms-label">
-                        <input type="checkbox" id="termsCheck" required>
-                        <span>I agree to the <a href="#" target="_blank">Terms and Conditions</a></span>
+                        <input type="checkbox" id="terms_accepted" name="terms_accepted" required>
+                        <span>I agree to the <a href="{% url 'terms_and_conditions' %}" target="_blank">Terms and Conditions</a></span>
                     </label>
-                </div>-->
+                </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="checkout-btn">

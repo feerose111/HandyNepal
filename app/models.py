@@ -131,5 +131,31 @@ class Product(models.Model):
         """Return the display name of the category"""
         return dict(self.CATEGORY_CHOICES).get(self.category, '')
 
-
+class PaymentDetails(models.Model):
+    """Model for storing payment details along with shipping information"""
+    # Payment information
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments', null=True, blank=True)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    transaction_id = models.CharField(max_length=100, blank=True, null=True)
+    purchase_order_id = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_status = models.CharField(max_length=20, default='pending')
+    payment_method = models.CharField(max_length=20, default='khalti')
     
+    # Customer information (for guests or to backup user info)
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField()
+    
+    # Additional information
+    terms_accepted = models.BooleanField(default=False)
+    
+    class Meta:
+        verbose_name = 'Payment Detail'
+        verbose_name_plural = 'Payment Details'
+        ordering = ['-payment_date']
+    
+    def __str__(self):
+        return f"Payment - {self.full_name} - {self.amount}"
+

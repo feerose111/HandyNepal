@@ -6,12 +6,13 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpRequest , HttpResponse
 from datetime import datetime
 from django.utils import timezone
-from decimal import Decimal
 from .models import User, Contact, Artisan, Product# Import the custom User model and Order models
 from django.core.paginator import Paginator
 import uuid
 import json, requests
-import os
+from django.conf import settings
+
+LIVE_SECRET_KEY = settings.LIVE_SECRET_KEY
 # Create your views here.
 
 def home(request):
@@ -250,12 +251,22 @@ def payment_portal(request):
     return render(request, 'payment/payment_portal.html', context)
 def initialize_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
-    return_url = request.POST.get('return_url')
-    website_url = request.POST.get('return_url')
+    
+    # Get the host for constructing full URLs
+    host = request.get_host()
+    
+    # Properly form the return_url with the full path
+    return_url = f"http://{host}/payment/verify/"
+    website_url = f"http://{host}"
+    
     amount = request.POST.get('amount')
     purchase_order_id = request.POST.get('purchase_order_id')
     
-    print(website_url)
+    # Print debug information
+    print(f"Return URL: {return_url}")
+    print(f"Website URL: {website_url}")
+    print(f"Amount: {amount}")
+    print(f"Order ID: {purchase_order_id}")
     
     payload = json.dumps({
         "return_url": return_url,
@@ -271,7 +282,7 @@ def initialize_payment(request):
     })
     
     headers = {
-        'Authorization': 'key 5987730274304f0ab7d099a9e9528e05',
+        'Authorization': LIVE_SECRET_KEY,
         'Content-Type': 'application/json',
     }
     
@@ -279,10 +290,81 @@ def initialize_payment(request):
     new_res = json.loads(response.text)
     print(new_res)
     return redirect(new_res['payment_url'])
-    return redirect('payment_portal')
+    
 
 def verify(request):
-    return render(request, 'payment/payment_portal.html')
+    """Verify Khalti payment status using lookup API"""
+    if request.method == 'GET':
+        # Get parameters from the Khalti callback
+        pidx = request.GET.get('pidx')
+        status = request.GET.get('status')
+        transaction_id = request.GET.get('transaction_id')
+        amount = request.GET.get('amount')
+        mobile = request.GET.get('mobile')
+        purchase_order_id = request.GET.get('purchase_order_id')
+        
+        if not pidx:
+            messages.error(request, "Payment verification failed: Missing payment identifier")
+            return redirect('cart')
+        
+        # Lookup URL for payment verification
+        url = "https://a.khalti.com/api/v2/epayment/lookup/"
+        
+        # Prepare headers and data
+        headers = {
+            'Authorization': LIVE_SECRET_KEY,
+            'Content-Type': 'application/json',
+        }
+        
+        data = json.dumps({
+            'pidx': pidx
+        })
+        
+        try:
+            # Make verification request to Khalti
+            response = requests.post(url, headers=headers, data=data)
+            response_data = response.json()
+            
+            # Check payment status from lookup API
+            lookup_status = response_data.get('status')
+            transaction_id = response_data.get('transaction_id')
+            amount = response_data.get('total_amount')
+            
+            # If payment is complete, process the order
+            if lookup_status == 'Completed':
+                # Payment successful, process the order
+                messages.success(request, "Payment successful! Your order has been placed.")
+                
+                # Clear the cart
+                if 'cart' in request.session:
+                    del request.session['cart']
+                    request.session.modified = True
+                
+                return redirect('home')
+                
+            elif lookup_status == 'Pending':
+                # Payment is pending
+                messages.info(request, "Your payment is being processed. We'll update you once confirmed.")
+                return redirect('cart')
+                
+            elif lookup_status in ['Refunded', 'Expired', 'User canceled']:
+                # Payment failed or canceled
+                messages.error(request, f"Payment {lookup_status.lower()}. Please try again.")
+                return redirect('cart')
+                
+            else:
+                # Unknown status
+                messages.error(request, f"Payment verification returned unknown status: {lookup_status}. Please contact support.")
+                return redirect('cart')
+                
+        except Exception as e:
+            # Handle request exceptions
+            print(f"Exception during verification: {str(e)}")
+            messages.error(request, f"Payment verification failed: {str(e)}")
+            return redirect('cart')
+    
+    
+    return redirect('payment_portal')
 
 # Cart Views
 def cart(request):
