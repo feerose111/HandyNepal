@@ -28,22 +28,22 @@
                 </div>
 
                 <ul class="dashboard-menu">
-                    <li class="active"><a href="#dashboard-home" data-toggle="tab"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="#profile" data-toggle="tab"><i class="fas fa-user"></i> Profile</a></li>
+                    <li class="active"><a href="#dashboard-home" data-bs-toggle="tab"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#profile" data-bs-toggle="tab"><i class="fas fa-user"></i> Profile</a></li>
                     
                     {% if user.role == 'buyer' %}
-                    <li><a href="#orders" data-toggle="tab"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-                    <li><a href="#order-tracking" data-toggle="tab"><i class="fas fa-truck"></i> Track Orders</a></li>
+                    <li><a href="#orders" data-bs-toggle="tab"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+                    <li><a href="#order-tracking" data-bs-toggle="tab"><i class="fas fa-truck"></i> Track Orders</a></li>
                     {% endif %}
                     
                     {% if user.role == 'seller' %}
-                    <li><a href="#products" data-toggle="tab"><i class="fas fa-box"></i> Products</a></li>
-                    <li><a href="#manage-orders" data-toggle="tab"><i class="fas fa-tasks"></i> Manage Orders</a></li>
-                    <li><a href="#sales" data-toggle="tab"><i class="fas fa-chart-line"></i> Sales</a></li>
+                    <li><a href="#products" data-bs-toggle="tab"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="#manage-orders" data-bs-toggle="tab"><i class="fas fa-tasks"></i> Manage Orders</a></li>
+                    <li><a href="#sales" data-bs-toggle="tab"><i class="fas fa-chart-line"></i> Sales</a></li>
                     {% endif %}
                     
-                    <li><a href="#account" data-toggle="tab"><i class="fas fa-cog"></i> Account Settings</a></li>
-                    <li><a href="#help" data-toggle="tab"><i class="fas fa-question-circle"></i> Help</a></li>
+                    <li><a href="#account" data-bs-toggle="tab"><i class="fas fa-cog"></i> Account Settings</a></li>
+                    <li><a href="{% url 'faq' %}" ><i class="fas fa-question-circle"></i> Help</a></li>
                     <li><a href="{% url 'user_logout' %}" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </div>
@@ -76,7 +76,7 @@
                                 <p>Active Products</p>
                             </div>
                             <div class="stat-card">
-                                <h3>${{ total_sales|default:"0" }}</h3>
+                                <h3>₹{{ total_sales|default:"0" }}</h3>
                                 <p>Total Sales</p>
                             </div>
                             {% endif %}
@@ -168,10 +168,10 @@
                         
                         <ul class="nav nav-tabs order-tabs" id="orderTabs" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="pending-tab" data-toggle="tab" href="#pending-orders" role="tab">Pending Orders</a>
+                                <a class="nav-link active" id="pending-tab" data-bs-toggle="tab" href="#pending-orders" role="tab">Pending Orders</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="completed-tab" data-toggle="tab" href="#completed-orders" role="tab">Past Orders</a>
+                                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed-orders" role="tab">Completed Orders</a>
                             </li>
                         </ul>
                         
@@ -184,32 +184,30 @@
                                             <tr>
                                                 <th>Order ID</th>
                                                 <th>Date</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
+                                                <th>Amount</th>
                                                 <th>Status</th>
-                                                <th>Payment</th>
+                                                <th>Payment Method</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for order in pending_orders %}
                                             <tr>
-                                                <td>#{{ order.id }}</td>
-                                                <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                <td>{{ order.item_count }} items</td>
-                                                <td>${{ order.total }}</td>
-                                                <td><span class="status-badge {{ order.status|lower }}">{{ order.status }}</span></td>
-                                                <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td>#{{ order.purchase_order_id }}</td>
+                                                <td>{{ order.payment_date|date:"M d, Y" }}</td>
+                                                <td>₹{{ order.amount }}</td>
+                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td>{{ order.payment_method|title }}</td>
                                                 <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.id }}">View</a>
-                                                    {% if order.status == 'Pending' %}
-                                                    <a href="#" class="btn btn-sm btn-outline-danger cancel-order-btn" data-order-id="{{ order.id }}">Cancel</a>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.purchase_order_id }}">View</a>
+                                                    {% if order.payment_status == 'Pending' %}
+                                                    <a href="#" class="btn btn-sm btn-outline-danger cancel-order-btn" data-order-id="{{ order.purchase_order_id }}">Cancel</a>
                                                     {% endif %}
                                                 </td>
                                             </tr>
                                             {% empty %}
                                             <tr>
-                                                <td colspan="7" class="text-center">No pending orders</td>
+                                                <td colspan="6" class="text-center">No pending orders</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -225,32 +223,30 @@
                                             <tr>
                                                 <th>Order ID</th>
                                                 <th>Date</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
+                                                <th>Amount</th>
                                                 <th>Status</th>
-                                                <th>Payment</th>
+                                                <th>Payment Method</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for order in completed_orders %}
                                             <tr>
-                                                <td>#{{ order.id }}</td>
-                                                <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                <td>{{ order.item_count }} items</td>
-                                                <td>${{ order.total }}</td>
-                                                <td><span class="status-badge {{ order.status|lower }}">{{ order.status }}</span></td>
-                                                <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td>#{{ order.purchase_order_id }}</td>
+                                                <td>{{ order.payment_date|date:"M d, Y" }}</td>
+                                                <td>₹{{ order.amount }}</td>
+                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td>{{ order.payment_method|title }}</td>
                                                 <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.id }}">View</a>
-                                                    {% if order.status == 'Delivered' %}
-                                                    <a href="#" class="btn btn-sm btn-outline-success review-order-btn" data-order-id="{{ order.id }}">Review</a>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.purchase_order_id }}">View</a>
+                                                    {% if order.payment_status == 'Completed' %}
+                                                    <a href="#" class="btn btn-sm btn-outline-success review-order-btn" data-order-id="{{ order.purchase_order_id }}">Review</a>
                                                     {% endif %}
                                                 </td>
                                             </tr>
                                             {% empty %}
                                             <tr>
-                                                <td colspan="7" class="text-center">No completed orders</td>
+                                                <td colspan="6" class="text-center">No completed orders</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -282,59 +278,76 @@
                             <div class="order-details-card mb-4">
                                 <div class="order-details-header d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h4 class="mb-0">Order #{{ order.id }}</h4>
-                                        <small>Placed on {{ order.created_at|date:"M d, Y" }}</small>
+                                        <h4 class="mb-0">Order #{{ order.purchase_order_id }}</h4>
+                                        <small>Placed on {{ order.payment_date|date:"M d, Y" }}</small>
                                     </div>
-                                    <span class="status-badge {{ order.status|lower }}">{{ order.status }}</span>
+                                    <span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span>
                                 </div>
                                 
                                 <div class="order-details-body">
                                     <div class="order-tracking">
                                         <div class="tracking-steps">
-                                            <div class="tracking-step {% if order.status == 'Pending' or order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}completed{% endif %}">
+                                            <div class="tracking-step completed">
                                                 <div class="step-icon"><i class="fas fa-clipboard-check"></i></div>
                                                 <div class="step-label">Order Placed</div>
                                             </div>
-                                            <div class="tracking-step {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}completed{% elif order.status == 'Pending' %}active{% endif %}">
-                                                <div class="step-icon"><i class="fas fa-cog"></i></div>
+                                            <div class="tracking-step {% if order.payment_status == 'Completed' %}completed{% elif order.payment_status == 'Pending' %}active{% endif %}">
+                                                <div class="step-icon"><i class="fas fa-credit-card"></i></div>
+                                                <div class="step-label">Payment Confirmed</div>
+                                            </div>
+                                            <div class="tracking-step {% if order.payment_status == 'Completed' %}active{% endif %}">
+                                                <div class="step-icon"><i class="fas fa-box"></i></div>
                                                 <div class="step-label">Processing</div>
                                             </div>
-                                            <div class="tracking-step {% if order.status == 'Shipped' or order.status == 'Delivered' %}completed{% elif order.status == 'Processing' %}active{% endif %}">
-                                                <div class="step-icon"><i class="fas fa-box"></i></div>
-                                                <div class="step-label">Shipped</div>
-                                            </div>
-                                            <div class="tracking-step {% if order.status == 'Delivered' %}completed{% elif order.status == 'Shipped' %}active{% endif %}">
+                                            <div class="tracking-step">
                                                 <div class="step-icon"><i class="fas fa-truck"></i></div>
-                                                <div class="step-label">Out for Delivery</div>
+                                                <div class="step-label">Shipping</div>
                                             </div>
-                                            <div class="tracking-step {% if order.status == 'Delivered' %}completed{% endif %}">
+                                            <div class="tracking-step">
                                                 <div class="step-icon"><i class="fas fa-home"></i></div>
                                                 <div class="step-label">Delivered</div>
                                             </div>
                                         </div>
                                         
                                         <div class="tracking-details">
-                                            <h5>Tracking History</h5>
+                                            <h5>Order Details</h5>
                                             <ul class="tracking-timeline">
-                                                {% for update in order.tracking_updates %}
                                                 <li class="timeline-item">
                                                     <div class="timeline-dot"></div>
                                                     <div class="timeline-content">
-                                                        <div class="timeline-date">{{ update.timestamp|date:"M d, Y - h:i A" }}</div>
-                                                        <h6 class="timeline-title">{{ update.status }}</h6>
-                                                        <p class="timeline-description">{{ update.description }}</p>
-                                                    </div>
-                                                </li>
-                                                {% empty %}
-                                                <li class="timeline-item">
-                                                    <div class="timeline-dot"></div>
-                                                    <div class="timeline-content">
-                                                        <div class="timeline-date">{{ order.created_at|date:"M d, Y - h:i A" }}</div>
+                                                        <div class="timeline-date">{{ order.payment_date|date:"M d, Y - h:i A" }}</div>
                                                         <h6 class="timeline-title">Order Placed</h6>
-                                                        <p class="timeline-description">Your order has been received and is being processed.</p>
+                                                        <p class="timeline-description">Your order has been received.</p>
                                                     </div>
                                                 </li>
-                                                {% endfor %}
+                                                {% if order.payment_status == 'Completed' %}
+                                                <li class="timeline-item">
+                                                    <div class="timeline-dot"></div>
+                                                    <div class="timeline-content">
+                                                        <div class="timeline-date">{{ order.payment_date|date:"M d, Y - h:i A" }}</div>
+                                                        <h6 class="timeline-title">Payment Confirmed</h6>
+                                                        <p class="timeline-description">Your payment of ₹{{ order.amount }} has been confirmed.</p>
+                                                    </div>
+                                                </li>
+                                                {% elif order.payment_status == 'Pending' %}
+                                                <li class="timeline-item">
+                                                    <div class="timeline-dot"></div>
+                                                    <div class="timeline-content">
+                                                        <div class="timeline-date">{{ order.payment_date|date:"M d, Y - h:i A" }}</div>
+                                                        <h6 class="timeline-title">Payment Pending</h6>
+                                                        <p class="timeline-description">Your payment of ₹{{ order.amount }} is being processed.</p>
+                                                    </div>
+                                                </li>
+                                                {% elif order.payment_status in 'Refunded,Expired,User canceled' %}
+                                                <li class="timeline-item">
+                                                    <div class="timeline-dot"></div>
+                                                    <div class="timeline-content">
+                                                        <div class="timeline-date">{{ order.payment_date|date:"M d, Y - h:i A" }}</div>
+                                                        <h6 class="timeline-title">Payment {{ order.payment_status }}</h6>
+                                                        <p class="timeline-description">Your payment of ₹{{ order.amount }} has been {{ order.payment_status|lower }}.</p>
+                                                    </div>
+                                                </li>
+                                                {% endif %}
                                             </ul>
                                         </div>
                                     </div>
@@ -380,7 +393,7 @@
                                             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-thumb">
                                         </td>
                                         <td>{{ product.name }}</td>
-                                        <td>${{ product.price }}</td>
+                                        <td>₹{{ product.price }}</td>
                                         <td>{{ product.stock }}</td>
                                         <td>
                                             {% if product.is_active %}
@@ -417,16 +430,16 @@
                         
                         <ul class="nav nav-tabs order-tabs" id="manageOrderTabs" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="new-orders-tab" data-toggle="tab" href="#new-orders" role="tab">New Orders</a>
+                                <a class="nav-link active" id="new-orders-tab" data-bs-toggle="tab" href="#new-orders" role="tab">New Orders</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="processing-orders-tab" data-toggle="tab" href="#processing-orders" role="tab">Processing</a>
+                                <a class="nav-link" id="processing-orders-tab" data-bs-toggle="tab" href="#processing-orders" role="tab">Processing</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="shipped-orders-tab" data-toggle="tab" href="#shipped-orders" role="tab">Shipped</a>
+                                <a class="nav-link" id="shipped-orders-tab" data-bs-toggle="tab" href="#shipped-orders" role="tab">Shipped</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="delivered-orders-tab" data-toggle="tab" href="#delivered-orders" role="tab">Delivered</a>
+                                <a class="nav-link" id="delivered-orders-tab" data-bs-toggle="tab" href="#delivered-orders" role="tab">Delivered</a>
                             </li>
                         </ul>
                         
@@ -453,7 +466,7 @@
                                                 <td>{{ order.customer_name }}</td>
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
-                                                <td>${{ order.total }}</td>
+                                                <td>₹{{ order.total }}</td>
                                                 <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
@@ -492,7 +505,7 @@
                                                 <td>{{ order.customer_name }}</td>
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
-                                                <td>${{ order.total }}</td>
+                                                <td>₹{{ order.total }}</td>
                                                 <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
@@ -531,7 +544,7 @@
                                                 <td>{{ order.customer_name }}</td>
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
-                                                <td>${{ order.total }}</td>
+                                                <td>₹{{ order.total }}</td>
                                                 <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
@@ -570,7 +583,7 @@
                                                 <td>{{ order.customer_name }}</td>
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
-                                                <td>${{ order.total }}</td>
+                                                <td>₹{{ order.total }}</td>
                                                 <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
@@ -657,77 +670,7 @@
                         <div class="settings-section">
                             <h3>Delete Account</h3>
                             <p class="text-danger">Warning: This action cannot be undone. All your data will be permanently deleted.</p>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">Delete My Account</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Help Tab -->
-                <div class="tab-pane fade" id="help">
-                    <div class="dashboard-card">
-                        <h2>Help Center</h2>
-                        
-                        <div class="accordion" id="helpAccordion">
-                            <div class="card">
-                                <div class="card-header" id="headingOne">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            How do I place an order?
-                                        </button>
-                                    </h2>
-                                </div>
-                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#helpAccordion">
-                                    <div class="card-body">
-                                        To place an order, browse our products, add items to your cart, and proceed to checkout. Follow the steps to provide shipping information and payment details.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="card">
-                                <div class="card-header" id="headingTwo">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                            How can I track my order?
-                                        </button>
-                                    </h2>
-                                </div>
-                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#helpAccordion">
-                                    <div class="card-body">
-                                        You can track your order by visiting the "Orders" section in your dashboard and clicking on the "View" button for the specific order.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="card">
-                                <div class="card-header" id="headingThree">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                            How do I sell my products?
-                                        </button>
-                                    </h2>
-                                </div>
-                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#helpAccordion">
-                                    <div class="card-body">
-                                        To sell products, make sure your account is registered as a "Seller" or "Hybrid." Go to the "Products" tab, click "Add New Product," and fill in the required details.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-support mt-4">
-                            <h3>Contact Support</h3>
-                            <form method="post" action="#">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label>Subject</label>
-                                    <input type="text" class="form-control" name="subject" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Message</label>
-                                    <textarea class="form-control" name="message" rows="5" required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit Ticket</button>
-                            </form>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete My Account</button>
                         </div>
                     </div>
                 </div>
@@ -742,9 +685,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.</p>
@@ -757,10 +698,73 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" form="deleteAccountForm" class="btn btn-danger">Delete Account</button>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make main dashboard tabs work
+        const dashboardTabs = document.querySelectorAll('.dashboard-menu a[data-bs-toggle="tab"]');
+        dashboardTabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs
+                document.querySelectorAll('.dashboard-menu li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.parentElement.classList.add('active');
+                
+                // Get target tab pane
+                const target = this.getAttribute('href');
+                
+                // Hide all tab panes
+                document.querySelectorAll('.tab-content > .tab-pane').forEach(pane => {
+                    pane.classList.remove('show', 'active');
+                });
+                
+                // Show target tab pane
+                document.querySelector(target).classList.add('show', 'active');
+            });
+        });
+        
+        // Make nested tabs work (orders, manage orders)
+        const nestedTabs = document.querySelectorAll('.nav-tabs .nav-link[data-bs-toggle="tab"]');
+        nestedTabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Find parent tab content
+                const parentTabContent = this.closest('.tab-content').parentElement;
+                
+                // Remove active class from all tabs in this set
+                this.closest('.nav-tabs').querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Get target tab pane
+                const target = this.getAttribute('href');
+                
+                // Hide all tab panes in this set
+                parentTabContent.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('show', 'active');
+                });
+                
+                // Show target tab pane
+                document.querySelector(target).classList.add('show', 'active');
+            });
+        });
+    });
+</script>
 {% endblock %}

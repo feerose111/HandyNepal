@@ -91,8 +91,63 @@ def contact(request):
     
     return render(request, 'main/contact.html')
 
-def user_dashboard(request):
-    return render(request, 'main/dashboard.html')
+def user_dashboard(request): 
+    context = {}
+    
+    # Add current date to context
+    context['current_date'] = timezone.now().strftime("%B %d, %Y")
+    
+    # For buyer dashboard
+    if request.user.role == 'buyer':
+        # Get payment details for this user
+        payment_details = PaymentDetails.objects.filter(email=request.user.email).order_by('-payment_date')
+        
+        # Count payment statuses
+        pending_orders_count = payment_details.filter(payment_status='Pending').count()
+        completed_orders_count = payment_details.filter(payment_status='Completed').count()
+        
+        # Get recent payments for order display
+        pending_orders = payment_details.filter(payment_status='Pending')
+        completed_orders = payment_details.filter(payment_status='Completed')
+        recent_orders = payment_details.order_by('-payment_date')[:5]
+        
+        # Calculate days since user registration
+        days_active = (timezone.now() - request.user.date_joined).days
+        
+        # Create recent activities from payment history
+        recent_activities = []
+        for payment in payment_details[:5]:
+            icon = 'fas fa-shopping-cart'
+            if payment.payment_status == 'Completed':
+                description = f"Payment of ₹{payment.amount} completed"
+                icon = 'fas fa-check-circle'
+            elif payment.payment_status == 'Pending':
+                description = f"Payment of ₹{payment.amount} pending"
+                icon = 'fas fa-clock'
+            elif payment.payment_status in ['Refunded', 'Expired', 'User canceled']:
+                description = f"Payment of ₹{payment.amount} {payment.payment_status.lower()}"
+                icon = 'fas fa-times-circle'
+            else:
+                description = f"Order placed for ₹{payment.amount}"
+            
+            recent_activities.append({
+                'icon': icon,
+                'description': description,
+                'timestamp': payment.payment_date.strftime("%B %d, %Y, %I:%M %p")
+            })
+        
+        # Add data to context
+        context.update({
+            'pending_orders_count': pending_orders_count,
+            'completed_orders_count': completed_orders_count,
+            'pending_orders': pending_orders,
+            'completed_orders': completed_orders,
+            'recent_orders': recent_orders,
+            'days_active': days_active,
+            'recent_activities': recent_activities,
+        })
+    
+    return render(request, 'main/dashboard.html', context)
 
 #user authentication    
 def user_registration(request):

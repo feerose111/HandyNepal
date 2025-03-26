@@ -36,7 +36,7 @@
                         {% if item.product.artisan %}
                             <p class="cart-item-meta">By {{ item.product.artisan }}</p>
                         {% endif %}
-                        <p class="cart-item-price">${{ item.price }} per item</p>
+                        <p class="cart-item-price">₹{{ item.price }} per item</p>
                     </div>
                     <div class="cart-item-quantity">
                         <form method="post" action="{% url 'update_cart' %}" class="cart-quantity-form">
