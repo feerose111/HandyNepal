@@ -6,11 +6,12 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpRequest , HttpResponse
 from datetime import datetime
 from django.utils import timezone
-from .models import User, Contact, Artisan, Product# Import the custom User model and Order models
+from .models import User, Contact, Artisan, Product, PaymentDetails# Import the custom User model and Order models
 from django.core.paginator import Paginator
 import uuid
 import json, requests
 from django.conf import settings
+from decimal import Decimal
 
 LIVE_SECRET_KEY = settings.LIVE_SECRET_KEY
 # Create your views here.
@@ -251,56 +252,71 @@ def payment_portal(request):
     return render(request, 'payment/payment_portal.html', context)
 def initialize_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
+
     
-    # Get the host for constructing full URLs
-    host = request.get_host()
+    if request.method == "POST":
+        amount = request.POST.get('amount')
+        amount = int(amount)
+        amount_in_rupee = int(amount/100) #changing back to rupees
+        purchase_order_id = request.POST.get('purchase_order_id')
+        return_url = request.POST.get('return_url')
+        website_url = request.POST.get('return_url')
+        
+        #customer information
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+        
+        #added info
+        terms_accepted = request.POST.get('terms_accepted') == 'on'
     
-    # Properly form the return_url with the full path
-    return_url = f"http://{host}/payment/verify/"
-    website_url = f"http://{host}"
-    
-    amount = request.POST.get('amount')
-    purchase_order_id = request.POST.get('purchase_order_id')
-    
-    # Print debug information
-    print(f"Return URL: {return_url}")
-    print(f"Website URL: {website_url}")
-    print(f"Amount: {amount}")
-    print(f"Order ID: {purchase_order_id}")
-    
-    payload = json.dumps({
-        "return_url": return_url,
-        "website_url": website_url,
-        "amount": amount,
-        "purchase_order_id": purchase_order_id,
-        "purchase_order_name": "test",
-        "customer_info": {
-        "name": "Handy Nepal",
-        "email": "mew04804@gmail.com",
-        "phone": "9800000001"
+        PaymentDetails.objects.get_or_create(amount = amount_in_rupee , purchase_order_id = purchase_order_id,
+                        full_name = full_name, email = email, phone = phone, address = address, terms_accepted = terms_accepted)
+
+        payload = json.dumps({
+            "return_url": return_url,
+            "website_url": website_url,
+            "amount": amount,
+            "purchase_order_id": purchase_order_id,
+            "purchase_order_name": "test",
+            "customer_info": {
+            "name": full_name,
+            "email": email,
+            "phone": phone
+            }
+        })
+        
+        headers = {
+            'Authorization': LIVE_SECRET_KEY,
+            'Content-Type': 'application/json',
         }
-    })
+        
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload)
+            response_data = json.loads(response.text)
+            
+            if 'payment_url' in response_data:
+                return redirect(response_data['payment_url'])
+            else:
+                print(f"Error from Khalti: {response_data}")
+                messages.error(request, "Payment initialization failed. Please try again.")
+                return redirect('payment_portal')
+                
+        except Exception as e:
+            print(f"Error initializing payment: {str(e)}")
+            messages.error(request, "Payment service is currently unavailable. Please try again later.")
+            return redirect('payment_portal')
     
-    headers = {
-        'Authorization': LIVE_SECRET_KEY,
-        'Content-Type': 'application/json',
-    }
-    
-    response = requests.request("POST", url, headers=headers, data=payload)
-    new_res = json.loads(response.text)
-    print(new_res)
-    return redirect(new_res['payment_url'])
-    
+    # If not a POST request or other issue
+    return redirect('payment_portal')
 
 def verify(request):
     """Verify Khalti payment status using lookup API"""
     if request.method == 'GET':
         # Get parameters from the Khalti callback
         pidx = request.GET.get('pidx')
-        status = request.GET.get('status')
         transaction_id = request.GET.get('transaction_id')
-        amount = request.GET.get('amount')
-        mobile = request.GET.get('mobile')
         purchase_order_id = request.GET.get('purchase_order_id')
         
         if not pidx:
@@ -330,9 +346,14 @@ def verify(request):
             transaction_id = response_data.get('transaction_id')
             amount = response_data.get('total_amount')
             
+            payment_details  = PaymentDetails.objects.get(purchase_order_id = purchase_order_id)
+            
             # If payment is complete, process the order
             if lookup_status == 'Completed':
                 # Payment successful, process the order
+                payment_details.payment_status = lookup_status
+                payment_details.transaction_id = transaction_id
+                payment_details.save()
                 messages.success(request, "Payment successful! Your order has been placed.")
                 
                 # Clear the cart
@@ -349,11 +370,15 @@ def verify(request):
                 
             elif lookup_status in ['Refunded', 'Expired', 'User canceled']:
                 # Payment failed or canceled
+                payment_details.payment_status = lookup_status
+                payment_details.save()
                 messages.error(request, f"Payment {lookup_status.lower()}. Please try again.")
                 return redirect('cart')
                 
             else:
                 # Unknown status
+                payment_details.payment_status = 'unknown error'
+                payment_details.save()
                 messages.error(request, f"Payment verification returned unknown status: {lookup_status}. Please contact support.")
                 return redirect('cart')
                 
