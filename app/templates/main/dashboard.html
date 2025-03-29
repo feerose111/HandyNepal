@@ -39,10 +39,8 @@
                     {% if user.role == 'seller' %}
                     <li><a href="#products" data-bs-toggle="tab"><i class="fas fa-box"></i> Products</a></li>
                     <li><a href="#manage-orders" data-bs-toggle="tab"><i class="fas fa-tasks"></i> Manage Orders</a></li>
-                    <li><a href="#sales" data-bs-toggle="tab"><i class="fas fa-chart-line"></i> Sales</a></li>
                     {% endif %}
-                    
-                    <li><a href="#account" data-bs-toggle="tab"><i class="fas fa-cog"></i> Account Settings</a></li>
+
                     <li><a href="{% url 'faq' %}" ><i class="fas fa-question-circle"></i> Help</a></li>
                     <li><a href="{% url 'user_logout' %}" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
@@ -112,51 +110,114 @@
                 </div>
                 
                 <!-- Profile Tab -->
+
                 <div class="tab-pane fade" id="profile">
                     <div class="dashboard-card">
                         <h2>Personal Information</h2>
-                        <form method="post" action="#" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Full Name</label>
-                                        <input type="text" class="form-control" name="full_name" value="{{ user.full_name }}" required>
-                                    </div>
+                        
+                        <!-- Read-only display section -->
+                        <div id="user-info-display">
+                            <div class="row mb-4">
+                                <div class="col-md-12 d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Your Profile Information</h5>
+                                    <button id="edit-profile-btn" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i> Edit Profile
+                                    </button>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Email Address</label>
-                                        <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Phone Number</label>
-                                        <input type="tel" class="form-control" name="phone_number" value="{{ user.phone_number }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <textarea class="form-control" name="address" rows="3">{{ user.address }}</textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Profile Image</label>
-                                        <div class="file-upload-container">
-                                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                            <p class="upload-text">Click to upload or drag and drop</p>
-                                            <input type="file" class="form-control-file" name="profile_image">
+                            </div>
+                            
+                            <div class="user-info-list">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="info-item">
+                                            <span class="info-label">Full Name:</span>
+                                            <span class="info-value">{{ user.full_name }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <span class="info-label">Email Address:</span>
+                                            <span class="info-value">{{ user.email }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <span class="info-label">Phone Number:</span>
+                                            <span class="info-value">{{ user.phone_number }}</span>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="info-item">
+                                            <span class="info-label">Address:</span>
+                                            <span class="info-value">{{ user.address }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if user.profile_image %}
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <span class="info-label">Profile Image:</span>
+                                            <div class="profile-image-container">
+                                                <img src="{{ user.profile_image.url }}" alt="Profile Image" class="img-fluid rounded">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
-                        </form>
+                        </div>
+                        
+                        <!-- Edit form section (initially hidden) -->
+                        <div id="user-info-form" style="display: none;">
+                            <form method="post" action="#" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Full Name</label>
+                                            <input type="text" class="form-control" name="full_name" value="{{ user.full_name }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Email Address</label>
+                                            <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Phone Number</label>
+                                            <input type="tel" class="form-control" name="phone_number" value="{{ user.phone_number }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <textarea class="form-control" name="address" rows="3">{{ user.address }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Profile Image</label>
+                                            <div class="file-upload-container">
+                                                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                                <p class="upload-text">Click to upload or drag and drop</p>
+                                                <input type="file" class="form-control-file" name="profile_image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        <button type="button" id="cancel-edit-btn" class="btn btn-secondary ml-2">Cancel</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 
@@ -467,7 +528,7 @@
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
                                                 <td>₹{{ order.total }}</td>
-                                                <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
                                                     <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Processing">Process</a>
@@ -506,7 +567,7 @@
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
                                                 <td>₹{{ order.total }}</td>
-                                                <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
                                                     <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Shipped">Ship</a>
@@ -545,7 +606,7 @@
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
                                                 <td>₹{{ order.total }}</td>
-                                                <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
                                                     <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Delivered">Mark Delivered</a>
@@ -584,7 +645,7 @@
                                                 <td>{{ order.created_at|date:"M d, Y" }}</td>
                                                 <td>{{ order.item_count }} items</td>
                                                 <td>₹{{ order.total }}</td>
-                                                <td><span class="payment-status {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
                                                 </td>
@@ -603,168 +664,13 @@
                 </div>
                 {% endif %}
                 
-                <!-- Account Settings Tab -->
-                <div class="tab-pane fade" id="account">
-                    <div class="dashboard-card">
-                        <h2>Account Settings</h2>
-                        
-                        <!-- Password Change Section -->
-                        <div class="settings-section">
-                            <h3>Change Password</h3>
-                            <form method="post" action="#">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Current Password</label>
-                                            <input type="password" class="form-control" name="current_password" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>New Password</label>
-                                            <input type="password" class="form-control" name="new_password" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Confirm New Password</label>
-                                            <input type="password" class="form-control" name="confirm_password" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary">Update Password</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Notification Settings -->
-                        <div class="settings-section">
-                            <h3>Notification Preferences</h3>
-                            <form method="post" action="#">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="orderUpdates" name="order_updates" {% if user.profile.notifications.order_updates %}checked{% endif %}>
-                                        <label class="custom-control-label" for="orderUpdates">Order Updates</label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="promotions" name="promotions" {% if user.profile.notifications.promotions %}checked{% endif %}>
-                                        <label class="custom-control-label" for="promotions">Promotions and Discounts</label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="newsletter" name="newsletter" {% if user.profile.notifications.newsletter %}checked{% endif %}>
-                                        <label class="custom-control-label" for="newsletter">Newsletter</label>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save Preferences</button>
-                            </form>
-                        </div>
-                        
-                        <!-- Delete Account Section -->
-                        <div class="settings-section">
-                            <h3>Delete Account</h3>
-                            <p class="text-danger">Warning: This action cannot be undone. All your data will be permanently deleted.</p>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete My Account</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Account Modal -->
-<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteAccountModalLabel">Confirm Account Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.</p>
-                <form method="post" action="#" id="deleteAccountForm">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="password">Enter your password to confirm:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="deleteAccountForm" class="btn btn-danger">Delete Account</button>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Make main dashboard tabs work
-        const dashboardTabs = document.querySelectorAll('.dashboard-menu a[data-bs-toggle="tab"]');
-        dashboardTabs.forEach(tab => {
-            tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Remove active class from all tabs
-                document.querySelectorAll('.dashboard-menu li').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab
-                this.parentElement.classList.add('active');
-                
-                // Get target tab pane
-                const target = this.getAttribute('href');
-                
-                // Hide all tab panes
-                document.querySelectorAll('.tab-content > .tab-pane').forEach(pane => {
-                    pane.classList.remove('show', 'active');
-                });
-                
-                // Show target tab pane
-                document.querySelector(target).classList.add('show', 'active');
-            });
-        });
-        
-        // Make nested tabs work (orders, manage orders)
-        const nestedTabs = document.querySelectorAll('.nav-tabs .nav-link[data-bs-toggle="tab"]');
-        nestedTabs.forEach(tab => {
-            tab.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Find parent tab content
-                const parentTabContent = this.closest('.tab-content').parentElement;
-                
-                // Remove active class from all tabs in this set
-                this.closest('.nav-tabs').querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab
-                this.classList.add('active');
-                
-                // Get target tab pane
-                const target = this.getAttribute('href');
-                
-                // Hide all tab panes in this set
-                parentTabContent.querySelectorAll('.tab-pane').forEach(pane => {
-                    pane.classList.remove('show', 'active');
-                });
-                
-                // Show target tab pane
-                document.querySelector(target).classList.add('show', 'active');
-            });
-        });
-    });
-</script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

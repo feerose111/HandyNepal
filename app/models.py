@@ -158,4 +158,20 @@ class PaymentDetails(models.Model):
     
     def __str__(self):
         return f"Payment - {self.full_name} - {self.amount}"
+    
+class OrderDetail(models.Model):
+    ORDER_STATUS_CHOICE = (
+        ('processing' , 'Processing'),
+        ('shipping', 'Shipping'),
+        ('delivered', 'Delivered')
+    )
+    order_id = models.ForeignKey(PaymentDetails , on_delete= models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    order_status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Order #{self.order_id} - {self.order_status}"
+    
 
