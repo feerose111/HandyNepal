@@ -32,9 +32,6 @@
             tab.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Find parent tab content
-                const parentTabContent = this.closest('.tab-content').parentElement;
-                
                 // Remove active class from all tabs in this set
                 this.closest('.nav-tabs').querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
@@ -46,6 +43,9 @@
                 // Get target tab pane
                 const target = this.getAttribute('href');
                 
+                // Find the correct parent tab content that contains these nested panes
+                const parentTabContent = this.closest('.tab-content');
+                
                 // Hide all tab panes in this set
                 parentTabContent.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('show', 'active');
@@ -55,6 +55,87 @@
                 document.querySelector(target).classList.add('show', 'active');
             });
         });
+
+        // Order status filter functionality for buyer orders
+        const orderStatusFilter = document.getElementById('orderStatusFilter');
+        if (orderStatusFilter) {
+            orderStatusFilter.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                const orderRows = document.querySelectorAll('#ordersTable .order-row');
+                
+                orderRows.forEach(row => {
+                    if (selectedStatus === 'all' || row.getAttribute('data-status') === selectedStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Show "No orders found" message if no visible orders
+                const visibleOrders = Array.from(orderRows).filter(row => row.style.display !== 'none');
+                const noOrdersRow = document.querySelector('#ordersTable tr:not(.order-row)');
+                
+                if (visibleOrders.length === 0 && noOrdersRow) {
+                    noOrdersRow.style.display = '';
+                } else if (noOrdersRow) {
+                    noOrdersRow.style.display = 'none';
+                }
+            });
+        }
+        
+        // Order status filter functionality for seller manage orders
+        const manageOrderStatusFilter = document.getElementById('manageOrderStatusFilter');
+        if (manageOrderStatusFilter) {
+            manageOrderStatusFilter.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                const orderRows = document.querySelectorAll('#manageOrdersTable .order-row');
+                
+                orderRows.forEach(row => {
+                    if (selectedStatus === 'all' || row.getAttribute('data-status') === selectedStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Show "No orders found" message if no visible orders
+                const visibleOrders = Array.from(orderRows).filter(row => row.style.display !== 'none');
+                const noOrdersRow = document.querySelector('#manageOrdersTable tr:not(.order-row)');
+                
+                if (visibleOrders.length === 0 && noOrdersRow) {
+                    noOrdersRow.style.display = '';
+                } else if (noOrdersRow) {
+                    noOrdersRow.style.display = 'none';
+                }
+            });
+        }
+        
+        // Product status filter functionality for seller products
+        const productStatusFilter = document.getElementById('productStatusFilter');
+        if (productStatusFilter) {
+            productStatusFilter.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                const productRows = document.querySelectorAll('#productsTable .product-row');
+                
+                productRows.forEach(row => {
+                    if (selectedStatus === 'all' || row.getAttribute('data-status') === selectedStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Show "No products found" message if no visible products
+                const visibleProducts = Array.from(productRows).filter(row => row.style.display !== 'none');
+                const noProductsRow = document.querySelector('#productsTable tr:not(.product-row)');
+                
+                if (visibleProducts.length === 0 && noProductsRow) {
+                    noProductsRow.style.display = '';
+                } else if (noProductsRow) {
+                    noProductsRow.style.display = 'none';
+                }
+            });
+        }
     });
 
     document.addEventListener('DOMContentLoaded', function() {

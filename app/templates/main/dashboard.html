@@ -74,6 +74,14 @@
                                 <p>Active Products</p>
                             </div>
                             <div class="stat-card">
+                                <h3>{{ products_count|default:"0" }}</h3>
+                                <p>Total Products</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>{{ pending_orders_count|default:"0" }}</h3>
+                                <p>New Orders</p>
+                            </div>
+                            <div class="stat-card">
                                 <h3>₹{{ total_sales|default:"0" }}</h3>
                                 <p>Total Sales</p>
                             </div>
@@ -84,6 +92,65 @@
                                 <p>Days Active</p>
                             </div>
                         </div>
+                        
+                        {% if user.role == 'seller' %}
+                        <div class="seller-insights mb-4">
+                            <h3>Seller Insights</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="insight-card">
+                                        <div class="insight-header">
+                                            <i class="fas fa-chart-line"></i>
+                                            <h5>Performance Overview</h5>
+                                        </div>
+                                        <div class="insight-body">
+                                            <ul class="insight-list">
+                                                <li>
+                                                    <span>Orders Completed:</span>
+                                                    <strong>{{ completed_orders_count|default:"0" }}</strong>
+                                                </li>
+                                                <li>
+                                                    <span>Processing Orders:</span>
+                                                    <strong>{{ processing_orders_count|default:"0" }}</strong>
+                                                </li>
+                                                <li>
+                                                    <span>Total Customers:</span>
+                                                    <strong>{{ customer_count|default:"0" }}</strong>
+                                                </li>
+                                                <li>
+                                                    <span>Average Rating:</span>
+                                                    <strong>{{ average_rating|default:"0" }} <i class="fas fa-star text-warning"></i></strong>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="insight-card">
+                                        <div class="insight-header">
+                                            <i class="fas fa-bullseye"></i>
+                                            <h5>Goals</h5>
+                                        </div>
+                                        <div class="insight-body">
+                                            <div class="goal-progress">
+                                                <p>Monthly Sales Target</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ sales_goal_percentage|default:'0' }}%" aria-valuenow="{{ sales_goal_percentage|default:'0' }}" aria-valuemin="0" aria-valuemax="100">{{ sales_goal_percentage|default:'0' }}%</div>
+                                                </div>
+                                                <p class="text-muted small">₹{{ current_month_sales|default:"0" }} of ₹{{ monthly_sales_goal|default:"10000" }}</p>
+                                            </div>
+                                            <div class="goal-progress">
+                                                <p>Product Listing Completeness</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ product_completeness|default:'0' }}%" aria-valuenow="{{ product_completeness|default:'0' }}" aria-valuemin="0" aria-valuemax="100">{{ product_completeness|default:'0' }}%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                         
                         <div class="recent-activity">
                             <h3>Recent Activity</h3>
@@ -227,93 +294,71 @@
                     <div class="dashboard-card">
                         <h2>My Orders</h2>
                         
-                        <ul class="nav nav-tabs order-tabs" id="orderTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="pending-tab" data-bs-toggle="tab" href="#pending-orders" role="tab">Pending Orders</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed-orders" role="tab">Completed Orders</a>
-                            </li>
-                        </ul>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">All Orders</h5>
+                                <div>
+                                    <select class="form-select form-select-sm order-filter" id="orderStatusFilter">
+                                        <option value="all">All Orders</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <div class="tab-content">
-                            <!-- Pending Orders -->
-                            <div class="tab-pane fade show active" id="pending-orders">
-                                <div class="table-responsive">
-                                    <table class="table order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Date</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th>Payment Method</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order in pending_orders %}
-                                            <tr>
-                                                <td>#{{ order.purchase_order_id }}</td>
-                                                <td>{{ order.payment_date|date:"M d, Y" }}</td>
-                                                <td>₹{{ order.amount }}</td>
-                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
-                                                <td>{{ order.payment_method|title }}</td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.purchase_order_id }}">View</a>
-                                                    {% if order.payment_status == 'Pending' %}
-                                                    <a href="#" class="btn btn-sm btn-outline-danger cancel-order-btn" data-order-id="{{ order.purchase_order_id }}">Cancel</a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="6" class="text-center">No pending orders</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <!-- Completed Orders -->
-                            <div class="tab-pane fade" id="completed-orders">
-                                <div class="table-responsive">
-                                    <table class="table order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Date</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th>Payment Method</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order in completed_orders %}
-                                            <tr>
-                                                <td>#{{ order.purchase_order_id }}</td>
-                                                <td>{{ order.payment_date|date:"M d, Y" }}</td>
-                                                <td>₹{{ order.amount }}</td>
-                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
-                                                <td>{{ order.payment_method|title }}</td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.purchase_order_id }}">View</a>
-                                                    {% if order.payment_status == 'Completed' %}
-                                                    <a href="#" class="btn btn-sm btn-outline-success review-order-btn" data-order-id="{{ order.purchase_order_id }}">Review</a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="6" class="text-center">No completed orders</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table order-table" id="ordersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Payment Method</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in pending_orders %}
+                                    <tr class="order-row" data-status="pending">
+                                        <td>#{{ order.purchase_order_id }}</td>
+                                        <td>{{ order.payment_date|date:"M d, Y" }}</td>
+                                        <td>₹{{ order.amount }}</td>
+                                        <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                        <td>{{ order.payment_method|title }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.purchase_order_id }}">View</a>
+                                            {% if order.payment_status == 'Pending' %}
+                                            <a href="#" class="btn btn-sm btn-outline-danger cancel-order-btn" data-order-id="{{ order.purchase_order_id }}">Cancel</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    {% for order in completed_orders %}
+                                    <tr class="order-row" data-status="completed">
+                                        <td>#{{ order.purchase_order_id }}</td>
+                                        <td>{{ order.payment_date|date:"M d, Y" }}</td>
+                                        <td>₹{{ order.amount }}</td>
+                                        <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
+                                        <td>{{ order.payment_method|title }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="{{ order.purchase_order_id }}">View</a>
+                                            {% if order.payment_status == 'Completed' %}
+                                            <a href="#" class="btn btn-sm btn-outline-success review-order-btn" data-order-id="{{ order.purchase_order_id }}">Review</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    {% if not pending_orders and not completed_orders %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No orders found</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -326,10 +371,13 @@
                         <div class="row mb-4">
                             <div class="col-md-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Enter Order ID" id="track-order-input">
+                                    <form method = 'post' action="{% url 'track_order'%}"></form>
+                                        {% csrf_token %}
+                                    <input type="text" class="form-control" placeholder="Enter Order ID" id="track-order-input" value="{{purchase_order_id}}">
                                     <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button" id="track-order-btn">Track</button>
+                                        <button class="btn btn-primary" type="submit" id="track-order-btn">Track</button>                                        
                                     </div>
+                                </form>
                                 </div>
                             </div>
                         </div>
@@ -433,8 +481,21 @@
                             <a href="#" class="btn btn-primary">Add New Product</a>
                         </div>
                         
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">All Products</h5>
+                                <div>
+                                    <select class="form-select form-select-sm order-filter" id="productStatusFilter">
+                                        <option value="all">All Products</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="table-responsive">
-                            <table class="table product-table">
+                            <table class="table product-table" id="productsTable">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -448,7 +509,7 @@
                                 </thead>
                                 <tbody>
                                     {% for product in products %}
-                                    <tr>
+                                    <tr class="product-row" data-status="{% if product.is_active %}active{% else %}inactive{% endif %}">
                                         <td>#{{ product.id }}</td>
                                         <td>
                                             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-thumb">
@@ -489,176 +550,101 @@
                     <div class="dashboard-card">
                         <h2>Manage Orders</h2>
                         
-                        <ul class="nav nav-tabs order-tabs" id="manageOrderTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="new-orders-tab" data-bs-toggle="tab" href="#new-orders" role="tab">New Orders</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="processing-orders-tab" data-bs-toggle="tab" href="#processing-orders" role="tab">Processing</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="shipped-orders-tab" data-bs-toggle="tab" href="#shipped-orders" role="tab">Shipped</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="delivered-orders-tab" data-bs-toggle="tab" href="#delivered-orders" role="tab">Delivered</a>
-                            </li>
-                        </ul>
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">All Orders</h5>
+                                <div>
+                                    <select class="form-select form-select-sm order-filter" id="manageOrderStatusFilter">
+                                        <option value="all">All Orders</option>
+                                        <option value="new">New Orders</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="shipped">Shipped</option>
+                                        <option value="delivered">Delivered</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <div class="tab-content">
-                            <!-- New Orders -->
-                            <div class="tab-pane fade show active" id="new-orders">
-                                <div class="table-responsive">
-                                    <table class="table order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Date</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
-                                                <th>Payment</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order in new_orders %}
-                                            <tr>
-                                                <td>#{{ order.id }}</td>
-                                                <td>{{ order.customer_name }}</td>
-                                                <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                <td>{{ order.item_count }} items</td>
-                                                <td>₹{{ order.total }}</td>
-                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
-                                                    <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Processing">Process</a>
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="7" class="text-center">No new orders</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <!-- Processing Orders -->
-                            <div class="tab-pane fade" id="processing-orders">
-                                <div class="table-responsive">
-                                    <table class="table order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Date</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
-                                                <th>Payment</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order in processing_orders %}
-                                            <tr>
-                                                <td>#{{ order.id }}</td>
-                                                <td>{{ order.customer_name }}</td>
-                                                <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                <td>{{ order.item_count }} items</td>
-                                                <td>₹{{ order.total }}</td>
-                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
-                                                    <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Shipped">Ship</a>
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="7" class="text-center">No processing orders</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <!-- Shipped Orders -->
-                            <div class="tab-pane fade" id="shipped-orders">
-                                <div class="table-responsive">
-                                    <table class="table order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Date</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
-                                                <th>Payment</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order in shipped_orders %}
-                                            <tr>
-                                                <td>#{{ order.id }}</td>
-                                                <td>{{ order.customer_name }}</td>
-                                                <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                <td>{{ order.item_count }} items</td>
-                                                <td>₹{{ order.total }}</td>
-                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
-                                                    <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Delivered">Mark Delivered</a>
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="7" class="text-center">No shipped orders</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <!-- Delivered Orders -->
-                            <div class="tab-pane fade" id="delivered-orders">
-                                <div class="table-responsive">
-                                    <table class="table order-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Date</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
-                                                <th>Payment</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order in delivered_orders %}
-                                            <tr>
-                                                <td>#{{ order.id }}</td>
-                                                <td>{{ order.customer_name }}</td>
-                                                <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                                <td>{{ order.item_count }} items</td>
-                                                <td>₹{{ order.total }}</td>
-                                                <td><span class="status-badge {{ order.payment_status|lower }}">{{ order.payment_status }}</span></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
-                                                </td>
-                                            </tr>
-                                            {% empty %}
-                                            <tr>
-                                                <td colspan="7" class="text-center">No delivered orders</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table order-table" id="manageOrdersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in new_orders %}
+                                    <tr class="order-row" data-status="new">
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>{{ order.item_count }} items</td>
+                                        <td>₹{{ order.total }}</td>
+                                        <td><span class="status-badge pending">New</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
+                                            <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Processing">Process</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    {% for order in processing_orders %}
+                                    <tr class="order-row" data-status="processing">
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>{{ order.item_count }} items</td>
+                                        <td>₹{{ order.total }}</td>
+                                        <td><span class="status-badge processing">Processing</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
+                                            <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Shipped">Ship</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    {% for order in shipped_orders %}
+                                    <tr class="order-row" data-status="shipped">
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>{{ order.item_count }} items</td>
+                                        <td>₹{{ order.total }}</td>
+                                        <td><span class="status-badge shipped">Shipped</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
+                                            <a href="#" class="btn btn-sm btn-outline-success update-order-btn" data-order-id="{{ order.id }}" data-status="Delivered">Mark Delivered</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    {% for order in delivered_orders %}
+                                    <tr class="order-row" data-status="delivered">
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>{{ order.item_count }} items</td>
+                                        <td>₹{{ order.total }}</td>
+                                        <td><span class="status-badge delivered">Delivered</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary view-seller-order-btn" data-order-id="{{ order.id }}">View</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    {% if not new_orders and not processing_orders and not shipped_orders and not delivered_orders %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">No orders found</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

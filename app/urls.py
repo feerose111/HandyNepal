@@ -32,4 +32,8 @@ urlpatterns = [
     path('payment/initialize_payment/', views.initialize_payment, name='initialize_payment'),
     path('payment/verify/', views.verify, name='verify'),
     
+    # Order
+    path('user/dashboard/track_order/', views.track_order, name='track_order'),
+    path('user/dashboard/process_order/', views.process_order, name='process_order'),
+    
 ]

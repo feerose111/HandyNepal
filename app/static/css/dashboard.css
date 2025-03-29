@@ -154,6 +154,124 @@
     margin-bottom: 20px;
 }
 
+/* Order Filter */
+.order-filter {
+    min-width: 150px;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid #ddd;
+    color: var(--dark-color);
+    font-size: 0.9rem;
+    font-family: 'Georgia', serif;
+    background-color: white;
+}
+
+.order-filter:focus {
+    box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Orders Section */
+#ordersTable, #manageOrdersTable, #productsTable {
+    margin-top: 10px;
+}
+
+#ordersTable td, #manageOrdersTable td, #productsTable td {
+    vertical-align: middle;
+}
+
+#ordersTable .order-row:hover, 
+#manageOrdersTable .order-row:hover,
+#productsTable .product-row:hover {
+    background-color: rgba(139, 69, 19, 0.05);
+}
+
+/* Seller Insights */
+.seller-insights h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--light-color);
+    padding-bottom: 10px;
+}
+
+.insight-card {
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 20px;
+    height: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.insight-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.insight-header i {
+    background-color: rgba(139, 69, 19, 0.1);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.insight-header h5 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--dark-color);
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+
+.insight-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.insight-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.insight-list li:last-child {
+    border-bottom: none;
+}
+
+.goal-progress {
+    margin-bottom: 15px;
+}
+
+.goal-progress p {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+}
+
+.text-warning {
+    color: #ffc107 !important;
+}
+
 /* Dashboard Stats */
 .dashboard-stats {
     display: flex;

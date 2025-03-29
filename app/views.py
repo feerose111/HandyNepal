@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpRequest , HttpResponse
 from datetime import datetime
 from django.utils import timezone
-from .models import User, Contact, Artisan, Product, PaymentDetails# Import the custom User model and Order models
+from .models import User, Contact, Artisan, Product, PaymentDetails, OrderDetail# Import the custom User model and Order models
 from django.core.paginator import Paginator
 import uuid
 import json, requests
@@ -148,6 +148,54 @@ def user_dashboard(request):
         })
     
     return render(request, 'main/dashboard.html', context)
+
+def track_order(request):
+    if request.method == 'POST':
+        purchase_order_id = request.POST.get('purchase_order_id')
+        try:
+            payment = PaymentDetails.objects.get(purchase_order_id=purchase_order_id)
+
+            order_details = OrderDetail.objects.filter(order_id=payment)
+            
+            context = {
+                'payment': payment,
+                'order_details': order_details,
+                'found': True
+            }
+            return render(request, 'track_order_result.html', context)
+        
+        except PaymentDetails.DoesNotExist:
+            # Handle case when order is not found
+            context = {
+                'found': False,
+                'message': 'Order not found. Please check your order ID and try again.'
+            }
+            return render(request, 'track_order_result.html', context)
+    
+    return render(request, 'track_order.html')
+    
+def process_order(request):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        new_status = request.POST.get('order_status')
+        
+        try:
+            # Get the specific order detail by ID
+            order_detail = OrderDetail.objects.get(id=order_id)
+            
+            # Update the order status
+            order_detail.order_status = new_status
+            order_detail.save()
+            
+            # Optional: Add a success message
+            messages.success(request, f"Order #{order_detail.order_id} status updated to {order_detail.order_status}")
+        
+        except OrderDetail.DoesNotExist:
+            # Handle case when order is not found
+            messages.error(request, "Order not found. Please try again.")
+    
+    # Redirect to dashboard after processing
+    return redirect('dashboard')
 
 #user authentication    
 def user_registration(request):
