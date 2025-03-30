@@ -36,4 +36,13 @@ urlpatterns = [
     path('user/dashboard/track_order/', views.track_order, name='track_order'),
     path('user/dashboard/process_order/', views.process_order, name='process_order'),
     
+    # Add product and artisan
+    path('user/dashboard/add_product/', views.add_product, name='add_product'),
+    path('user/dashboard/add_artisan/', views.add_artisan, name='add_artisan'),
+    path('user/dashboard/delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('user/dashboard/edit_product/<int:product_id>/', views.edit_product, name='edit_product'),
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    
+        
+    
 ]

@@ -12,6 +12,7 @@ import uuid
 import json, requests
 from django.conf import settings
 from decimal import Decimal
+from django.views.decorators.csrf import csrf_protect
 
 LIVE_SECRET_KEY = settings.LIVE_SECRET_KEY
 # Create your views here.
@@ -97,6 +98,17 @@ def user_dashboard(request):
     # Add current date to context
     context['current_date'] = timezone.now().strftime("%B %d, %Y")
     
+    # For seller dashboard, get artisans and products
+    if request.user.role == 'seller':
+        # Get all artisans for the dropdown in Add Product form
+        artisans = Artisan.objects.all()
+        context['artisans'] = artisans
+        
+        # Get all products (no filtering by user since the field doesn't exist)
+        products = Product.objects.all()
+        context['products'] = products
+        context['products_count'] = products.count()
+    
     # For buyer dashboard
     if request.user.role == 'buyer':
         # Get payment details for this user
@@ -149,6 +161,180 @@ def user_dashboard(request):
     
     return render(request, 'main/dashboard.html', context)
 
+@csrf_protect
+def add_product(request):
+    """View to handle adding a new product to the database"""
+    
+    # Get list of artisans for the dropdown
+    artisans = Artisan.objects.all()
+    
+    if request.method == 'POST':
+        try:
+            # Extract data from form
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            price = request.POST.get('price')
+            discount_price = request.POST.get('discount_price') or None  # Handle empty string
+            category = request.POST.get('category')
+            artisan_id = request.POST.get('artisan') or None  # Handle empty selection
+            stock = request.POST.get('stock', 0)
+            
+            # Get flags
+            is_featured = request.POST.get('is_featured') == 'on'
+            is_new = request.POST.get('is_new') == 'on'
+            is_bestseller = request.POST.get('is_bestseller') == 'on'
+            
+            # Create new product instance
+            product = Product(
+                name=name,
+                description=description,
+                price=price,
+                discount_price=discount_price,
+                category=category,
+                stock=stock,
+                is_featured=is_featured,
+                is_new=is_new,
+                is_bestseller=is_bestseller
+            )
+            
+            # Set artisan if selected
+            if artisan_id:
+                product.artisan = Artisan.objects.get(id=artisan_id)
+                
+            # Handle image upload
+            if 'image' in request.FILES:
+                product.image = request.FILES['image']
+                
+            # Save to database
+            product.save()
+            
+            messages.success(request, f'Product "{name}" added successfully!')
+            return redirect('user_dashboard')  # Redirect to dashboard
+            
+        except Exception as e:
+            messages.error(request, f'Error adding product: {str(e)}')
+    
+    # For GET requests, include artisans in context for the dashboard
+    context = {
+        'artisans': artisans,
+    }
+    return redirect('user_dashboard')
+
+@csrf_protect
+def add_artisan(request):
+    """View to handle adding a new artisan to the database"""
+    
+    if request.method == 'POST':
+        try:
+            # Extract data from form
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            artisan_type = request.POST.get('artisan_type')
+            description = request.POST.get('description')
+            location = request.POST.get('location')
+            
+            # Create new artisan instance
+            artisan = Artisan(
+                first_name=first_name,
+                last_name=last_name,
+                artisan_type=artisan_type,
+                description=description,
+                location=location,
+                added_by=request.user,
+            )
+            
+            # Handle image upload
+            if 'image' in request.FILES:
+                artisan.image = request.FILES['image']
+                
+            # Save to database
+            artisan.save()
+            
+            messages.success(request, f'Artisan "{first_name} {last_name}" added successfully!')
+            return redirect('user_dashboard')  # Redirect to dashboard
+            
+        except Exception as e:
+            messages.error(request, f'Error adding artisan: {str(e)}')
+    
+    return redirect('user_dashboard')
+
+@csrf_protect
+def delete_product(request, product_id):
+    """View to handle deleting a product"""
+    try:
+        # Get the product (no user filtering since field doesn't exist)
+        product = get_object_or_404(Product, id=product_id)
+        product_name = product.name
+        
+        # Delete the product
+        product.delete()
+        
+        # Add success message
+        messages.success(request, f'Product "{product_name}" deleted successfully!')
+    except Exception as e:
+        messages.error(request, f'Error deleting product: {str(e)}')
+    
+    return redirect('user_dashboard')
+
+@csrf_protect
+def edit_product(request, product_id):
+    """View to handle editing a product"""
+    # Get the product (no user filtering since field doesn't exist)
+    product = get_object_or_404(Product, id=product_id)
+    
+    # Get all artisans for the dropdown
+    artisans = Artisan.objects.all()
+    
+    if request.method == 'POST':
+        try:
+            # Extract data from form
+            product.name = request.POST.get('name')
+            product.description = request.POST.get('description')
+            product.price = request.POST.get('price')
+            product.discount_price = request.POST.get('discount_price') or None
+            product.category = request.POST.get('category')
+            product.stock = request.POST.get('stock', 0)
+            
+            # Update flags
+            product.is_featured = request.POST.get('is_featured') == 'on'
+            product.is_new = request.POST.get('is_new') == 'on'
+            product.is_bestseller = request.POST.get('is_bestseller') == 'on'
+            
+            # Update artisan if provided
+            artisan_id = request.POST.get('artisan')
+            if artisan_id:
+                product.artisan = Artisan.objects.get(id=artisan_id)
+            else:
+                product.artisan = None
+                
+            # Handle image upload if provided
+            if 'image' in request.FILES:
+                product.image = request.FILES['image']
+                
+            # Save the updated product
+            product.save()
+            
+            messages.success(request, f'Product "{product.name}" updated successfully!')
+            return redirect('user_dashboard')
+            
+        except Exception as e:
+            messages.error(request, f'Error updating product: {str(e)}')
+            
+    # For GET requests, render the edit form with product data
+    context = {
+        'product': product,
+        'artisans': artisans,
+    }
+    return render(request, 'main/edit_product.html', context)
+
+def product_detail(request, product_id):
+    """View to display product details"""
+    product = get_object_or_404(Product, id=product_id)
+    context = {
+        'product': product,
+    }
+    return render(request, 'main/product_detail.html', context)
+
 def track_order(request):
     if request.method == 'POST':
         purchase_order_id = request.POST.get('purchase_order_id')
@@ -195,7 +381,7 @@ def process_order(request):
             messages.error(request, "Order not found. Please try again.")
     
     # Redirect to dashboard after processing
-    return redirect('dashboard')
+    return redirect('user_dashboard')
 
 #user authentication    
 def user_registration(request):
