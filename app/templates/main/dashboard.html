@@ -191,11 +191,6 @@
                                         <button id="edit-profile-btn" class="btn btn-sm btn-primary">
                                             <i class="fas fa-edit"></i> Edit Profile
                                         </button>
-                                        {% if user.role == 'seller' %}
-                                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addArtisanModal">
-                                            <i class="fas fa-plus"></i> Add Artisan
-                                        </button>
-                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -245,6 +240,57 @@
                                 {% endif %}
                             </div>
                         </div>
+                        
+                        {% if user.role == 'seller' %}
+                        <!-- User's Artisans Section -->
+                        <div class="mt-4 pt-4 border-top">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Your Artisan profile</h5>
+                                {% if not user_artisans %}
+                                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addArtisanModal">
+                                    <i class="fas fa-plus"></i> Add Artisan
+                                </button>
+                                {% else %}
+                                <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editArtisanModal{{ user_artisans.0.id }}">
+                                    <i class="fas fa-edit"></i> Edit Artisan
+                                </button>
+                                {% endif %}
+                            </div>
+                            
+                            {% if user_artisans %}
+                            <div class="row">
+                                {% for artisan in user_artisans %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="row g-0">
+                                            <div class="col-md-4">
+                                                {% if artisan.image %}
+                                                <img src="{{ artisan.image.url }}" alt="{{ artisan.first_name }}" class="img-fluid rounded-start h-100" style="object-fit: cover;">
+                                                {% else %}
+                                                <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                                    <i class="fas fa-user fa-3x text-secondary"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ artisan.first_name }} {{ artisan.last_name }}</h5>
+                                                    <p class="card-text"><small class="text-muted">{{ artisan.artisan_type|title }}</small></p>
+                                                    <p class="card-text"><small>{{ artisan.location }}</small></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> You haven't added any artisans yet. Use the "Add Artisan" button to add your first artisan.
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
                         
                         <!-- Edit form section (initially hidden) -->
                         <div id="user-info-form" style="display: none;">
@@ -378,13 +424,13 @@
                         <div class="row mb-4">
                             <div class="col-md-8">
                                 <div class="input-group">
-                                    <form method = 'post' action="{% url 'track_order'%}"></form>
+                                    <form method="post" action="{% url 'track_order' %}">
                                         {% csrf_token %}
-                                    <input type="text" class="form-control" placeholder="Enter Order ID" id="track-order-input" value="{{purchase_order_id}}">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit" id="track-order-btn">Track</button>                                        
-                                    </div>
-                                </form>
+                                        <input type="text" class="form-control" placeholder="Enter Order ID" name="purchase_order_id" id="track-order-input" value="{{purchase_order_id}}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit" id="track-order-btn">Track</button>                                        
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -411,18 +457,38 @@
                                                 <div class="step-icon"><i class="fas fa-credit-card"></i></div>
                                                 <div class="step-label">Payment Confirmed</div>
                                             </div>
-                                            <div class="tracking-step {% if order.payment_status == 'Completed' %}active{% endif %}">
-                                                <div class="step-icon"><i class="fas fa-box"></i></div>
-                                                <div class="step-label">Processing</div>
-                                            </div>
-                                            <div class="tracking-step">
-                                                <div class="step-icon"><i class="fas fa-truck"></i></div>
-                                                <div class="step-label">Shipping</div>
-                                            </div>
-                                            <div class="tracking-step">
-                                                <div class="step-icon"><i class="fas fa-home"></i></div>
-                                                <div class="step-label">Delivered</div>
-                                            </div>
+                                            
+                                            {% with order_details=order.orderdetail_set.all %}
+                                            {% if order_details %}
+                                                {% with order_detail=order_details.first %}
+                                                <div class="tracking-step {% if order_detail.order_status == 'processing' %}active{% elif order_detail.order_status == 'shipping' or order_detail.order_status == 'delivered' %}completed{% endif %}">
+                                                    <div class="step-icon"><i class="fas fa-box"></i></div>
+                                                    <div class="step-label">Processing</div>
+                                                </div>
+                                                <div class="tracking-step {% if order_detail.order_status == 'shipping' %}active{% elif order_detail.order_status == 'delivered' %}completed{% endif %}">
+                                                    <div class="step-icon"><i class="fas fa-truck"></i></div>
+                                                    <div class="step-label">Shipping</div>
+                                                </div>
+                                                <div class="tracking-step {% if order_detail.order_status == 'delivered' %}completed{% endif %}">
+                                                    <div class="step-icon"><i class="fas fa-home"></i></div>
+                                                    <div class="step-label">Delivered</div>
+                                                </div>
+                                                {% endwith %}
+                                            {% else %}
+                                                <div class="tracking-step {% if order.payment_status == 'Completed' %}active{% endif %}">
+                                                    <div class="step-icon"><i class="fas fa-box"></i></div>
+                                                    <div class="step-label">Processing</div>
+                                                </div>
+                                                <div class="tracking-step">
+                                                    <div class="step-icon"><i class="fas fa-truck"></i></div>
+                                                    <div class="step-label">Shipping</div>
+                                                </div>
+                                                <div class="tracking-step">
+                                                    <div class="step-icon"><i class="fas fa-home"></i></div>
+                                                    <div class="step-label">Delivered</div>
+                                                </div>
+                                            {% endif %}
+                                            {% endwith %}
                                         </div>
                                         
                                         <div class="tracking-details">
@@ -445,6 +511,30 @@
                                                         <p class="timeline-description">Your payment of ₹{{ order.amount }} has been confirmed.</p>
                                                     </div>
                                                 </li>
+                                                
+                                                {% with order_details=order.orderdetail_set.all %}
+                                                    {% if order_details %}
+                                                        {% with order_detail=order_details.first %}
+                                                            <li class="timeline-item">
+                                                                <div class="timeline-dot"></div>
+                                                                <div class="timeline-content">
+                                                                    <div class="timeline-date">{{ order_detail.updated_at|date:"M d, Y - h:i A" }}</div>
+                                                                    <h6 class="timeline-title">Order Status: {{ order_detail.order_status|title }}</h6>
+                                                                    <p class="timeline-description">
+                                                                        {% if order_detail.order_status == 'processing' %}
+                                                                            Your order is being processed and prepared for shipping.
+                                                                        {% elif order_detail.order_status == 'shipping' %}
+                                                                            Your order is on the way to your location.
+                                                                        {% elif order_detail.order_status == 'delivered' %}
+                                                                            Your order has been delivered successfully.
+                                                                        {% endif %}
+                                                                    </p>
+                                                                </div>
+                                                            </li>
+                                                        {% endwith %}
+                                                    {% endif %}
+                                                {% endwith %}
+                                                
                                                 {% elif order.payment_status == 'Pending' %}
                                                 <li class="timeline-item">
                                                     <div class="timeline-dot"></div>
@@ -808,6 +898,85 @@
         </div>
     </div>
 </div>
+{% endif %}
+
+<!-- Edit Artisan Modals -->
+{% if user.role == 'seller' and user_artisans %}
+    {% for artisan in user_artisans %}
+    <div class="modal fade" id="editArtisanModal{{ artisan.id }}" tabindex="-1" aria-labelledby="editArtisanModalLabel{{ artisan.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editArtisanModalLabel{{ artisan.id }}">Edit Artisan: {{ artisan.first_name }} {{ artisan.last_name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'edit_artisan' artisan.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" maxlength="255" value="{{ artisan.first_name }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" maxlength="255" value="{{ artisan.last_name }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="artisan_type" class="form-label">Artisan Type <span class="text-danger">*</span></label>
+                            <select class="form-select" id="artisan_type" name="artisan_type" required>
+                                <option value="">-- Select Artisan Type --</option>
+                                <option value="textile_weaver" {% if artisan.artisan_type == "textile_weaver" %}selected{% endif %}>Textile Weaver</option>
+                                <option value="potter" {% if artisan.artisan_type == "potter" %}selected{% endif %}>Potter</option>
+                                <option value="woodworker" {% if artisan.artisan_type == "woodworker" %}selected{% endif %}>Woodworker</option>
+                                <option value="metalsmith" {% if artisan.artisan_type == "metalsmith" %}selected{% endif %}>Metalsmith</option>
+                                <option value="jewelry_maker" {% if artisan.artisan_type == "jewelry_maker" %}selected{% endif %}>Jewelry Maker</option>
+                                <option value="basket_weaver" {% if artisan.artisan_type == "basket_weaver" %}selected{% endif %}>Basket Weaver</option>
+                                <option value="leather_worker" {% if artisan.artisan_type == "leather_worker" %}selected{% endif %}>Leather Worker</option>
+                                <option value="paper_maker" {% if artisan.artisan_type == "paper_maker" %}selected{% endif %}>Paper Maker</option>
+                                <option value="glass_blower" {% if artisan.artisan_type == "glass_blower" %}selected{% endif %}>Glass Blower</option>
+                                <option value="other" {% if artisan.artisan_type == "other" %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="artisan_description" class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="artisan_description" name="description" rows="5" required>{{ artisan.description }}</textarea>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="location" name="location" maxlength="255" value="{{ artisan.location }}" required>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="artisan_image" class="form-label">Artisan Photo</label>
+                            {% if artisan.image %}
+                            <div class="mb-2">
+                                <img src="{{ artisan.image.url }}" alt="{{ artisan.first_name }}" class="img-thumbnail" style="max-height: 100px;">
+                            </div>
+                            {% endif %}
+                            <input type="file" class="form-control" id="artisan_image" name="image" accept="image/*">
+                            <small class="form-text text-muted">Upload a new photo only if you want to change the current one.</small>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 {% endif %}
 
 {% endblock %}

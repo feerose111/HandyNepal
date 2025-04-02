@@ -6,6 +6,7 @@ admin.site.register(User)
 admin.site.register(Contact)
 admin.site.register(Product)
 admin.site.register(Artisan)
+admin.site.register(OrderDetail)
 
 @admin.register(PaymentDetails)
 class PaymentDetailsAdmin(admin.ModelAdmin):

@@ -104,6 +104,10 @@ def user_dashboard(request):
         artisans = Artisan.objects.all()
         context['artisans'] = artisans
         
+        # Get artisans added by this specific user
+        user_artisans = Artisan.objects.filter(added_by=request.user)
+        context['user_artisans'] = user_artisans
+        
         # Get all products (no filtering by user since the field doesn't exist)
         products = Product.objects.all()
         context['products'] = products
@@ -121,7 +125,20 @@ def user_dashboard(request):
         # Get recent payments for order display
         pending_orders = payment_details.filter(payment_status='Pending')
         completed_orders = payment_details.filter(payment_status='Completed')
-        recent_orders = payment_details.order_by('-payment_date')[:5]
+        
+        # Get tracked order from session if exists
+        tracked_order_id = request.session.get('tracked_order_id')
+        if tracked_order_id:
+            try:
+                tracked_order = PaymentDetails.objects.get(purchase_order_id=tracked_order_id)
+                recent_orders = [tracked_order]
+                # Clear from session after use
+                del request.session['tracked_order_id']
+                request.session.modified = True
+            except PaymentDetails.DoesNotExist:
+                recent_orders = payment_details.order_by('payment_date')[:5]
+        else:
+            recent_orders = payment_details.order_by('payment_date')[:5]
         
         # Calculate days since user registration
         days_active = (timezone.now() - request.user.date_joined).days
@@ -214,10 +231,6 @@ def add_product(request):
         except Exception as e:
             messages.error(request, f'Error adding product: {str(e)}')
     
-    # For GET requests, include artisans in context for the dashboard
-    context = {
-        'artisans': artisans,
-    }
     return redirect('user_dashboard')
 
 @csrf_protect
@@ -225,6 +238,12 @@ def add_artisan(request):
     """View to handle adding a new artisan to the database"""
     
     if request.method == 'POST':
+        # Check if user already has an artisan
+        existing_artisans = Artisan.objects.filter(added_by=request.user).count()
+        if existing_artisans > 0:
+            messages.warning(request, 'You have already added an artisan profile. Only one artisan profile is allowed per seller account.')
+            return redirect('user_dashboard')
+        
         try:
             # Extract data from form
             first_name = request.POST.get('first_name')
@@ -233,14 +252,14 @@ def add_artisan(request):
             description = request.POST.get('description')
             location = request.POST.get('location')
             
-            # Create new artisan instance
+            # Create new artisan instance with the current user
             artisan = Artisan(
                 first_name=first_name,
                 last_name=last_name,
                 artisan_type=artisan_type,
                 description=description,
                 location=location,
-                added_by=request.user,
+                added_by=request.user,  # Set the current user as the added_by
             )
             
             # Handle image upload
@@ -334,31 +353,29 @@ def product_detail(request, product_id):
         'product': product,
     }
     return render(request, 'main/product_detail.html', context)
-
+        
 def track_order(request):
     if request.method == 'POST':
         purchase_order_id = request.POST.get('purchase_order_id')
         try:
-            payment = PaymentDetails.objects.get(purchase_order_id=purchase_order_id)
-
-            order_details = OrderDetail.objects.filter(order_id=payment)
+            PaymentDetails.objects.get(purchase_order_id=purchase_order_id)
+            # No need to get order details here as they will be fetched in the dashboard view
             
-            context = {
-                'payment': payment,
-                'order_details': order_details,
-                'found': True
-            }
-            return render(request, 'track_order_result.html', context)
+            # When tracking from the dashboard, redirect back with the order details
+            messages.success(request, f"Order #{purchase_order_id} found")
+            
+            # Pass the purchase_order_id back to the dashboard
+            request.session['tracked_order_id'] = purchase_order_id
+            
+            return redirect('user_dashboard')
         
         except PaymentDetails.DoesNotExist:
             # Handle case when order is not found
-            context = {
-                'found': False,
-                'message': 'Order not found. Please check your order ID and try again.'
-            }
-            return render(request, 'track_order_result.html', context)
+            messages.error(request, 'Order not found. Please check your order ID and try again.')
+            return redirect('user_dashboard')
     
-    return render(request, 'track_order.html')
+    # If not a POST request, just redirect to dashboard
+    return redirect('user_dashboard')
     
 def process_order(request):
     if request.method == 'POST':
@@ -643,6 +660,22 @@ def verify(request):
                 payment_details.payment_status = lookup_status
                 payment_details.transaction_id = transaction_id
                 payment_details.save()
+                
+                # Get cart items to create order details
+                cart_items = []
+                if 'cart' in request.session:
+                    cart = request.session['cart']
+                    for product_id, item_data in cart.items():
+                        product = get_object_or_404(Product, id=product_id)
+                        quantity = item_data['quantity']
+                        cart_items.append({
+                            'product': product,
+                            'quantity': quantity
+                        })
+                    
+                    # Create order details for each cart item
+                    handle_payment_success(payment_details, cart_items)
+                
                 messages.success(request, "Payment successful! Your order has been placed.")
                 
                 # Clear the cart
@@ -806,3 +839,58 @@ def remove_from_cart(request):
         return redirect('cart')
     
     return redirect('collections')
+
+def handle_payment_success(payment, cart_items):
+    """
+    Create OrderDetail records after payment has been completed
+    This function should be called when payment status is changed to 'Completed'
+    """
+    for cart_item in cart_items:
+        # Create OrderDetail for each product in the cart
+        OrderDetail.objects.create(
+            order_id=payment,
+            product=cart_item['product'],
+            order_status='processing'  # Initial status
+        )
+        
+        # Update product stock
+        product = cart_item['product']
+        product.stock -= cart_item['quantity']
+        product.save()
+    
+    return True
+
+@csrf_protect
+def edit_artisan(request, artisan_id):
+    """View to handle editing an existing artisan"""
+    
+    # Get the artisan, ensuring it belongs to the current user
+    try:
+        artisan = Artisan.objects.get(id=artisan_id, added_by=request.user)
+    except Artisan.DoesNotExist:
+        messages.error(request, "You don't have permission to edit this artisan.")
+        return redirect('user_dashboard')
+    
+    if request.method == 'POST':
+        try:
+            # Extract data from form
+            artisan.first_name = request.POST.get('first_name')
+            artisan.last_name = request.POST.get('last_name')
+            artisan.artisan_type = request.POST.get('artisan_type')
+            artisan.description = request.POST.get('description')
+            artisan.location = request.POST.get('location')
+            
+            # Handle image upload if provided
+            if 'image' in request.FILES:
+                artisan.image = request.FILES['image']
+                
+            # Save the updated artisan
+            artisan.save()
+            
+            messages.success(request, f'Artisan "{artisan.first_name} {artisan.last_name}" updated successfully!')
+            return redirect('user_dashboard')
+            
+        except Exception as e:
+            messages.error(request, f'Error updating artisan: {str(e)}')
+    
+    return redirect('user_dashboard')

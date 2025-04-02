@@ -69,6 +69,7 @@ class Artisan(models.Model):
     image = models.ImageField(upload_to='artisans/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    added_by = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True, related_name='artisans')
     
     def __str__(self):
         return self.first_name + ' ' + self.last_name
