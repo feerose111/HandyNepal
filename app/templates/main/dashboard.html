@@ -574,7 +574,7 @@
                 <div class="tab-pane fade" id="products">
                     <div class="dashboard-card">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2>My Products</h2>
+                            <h2>Your Products</h2>
                             <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Product</a>
                         </div>
                         
@@ -623,7 +623,7 @@
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="7" class="text-center">No products added yet</td>
+                                        <td colspan="7" class="text-center">You haven't added any products yet. Use the "Add New Product" button to get started.</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -702,7 +702,7 @@
                                         <label for="artisan" class="form-label">Artisan</label>
                                         <select class="form-select" id="artisan" name="artisan">
                                             <option value="">-- Select Artisan --</option>
-                                            {% for artisan in artisans %}
+                                            {% for artisan in user_artisans %}
                                             <option value="{{ artisan.id }}">{{ artisan.first_name }} {{ artisan.last_name }}</option>
                                             {% endfor %}
                                         </select>

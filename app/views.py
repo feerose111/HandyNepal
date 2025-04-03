@@ -108,8 +108,14 @@ def user_dashboard(request):
         user_artisans = Artisan.objects.filter(added_by=request.user)
         context['user_artisans'] = user_artisans
         
-        # Get all products (no filtering by user since the field doesn't exist)
-        products = Product.objects.all()
+        # Get only products added by this user (via their artisans)
+        if user_artisans.exists():
+            # If user has artisans, get products linked to those artisans
+            products = Product.objects.filter(artisan__in=user_artisans)
+        else:
+            # If no artisans yet, return empty queryset
+            products = Product.objects.none()
+            
         context['products'] = products
         context['products_count'] = products.count()
     
