@@ -118,6 +118,36 @@ def user_dashboard(request):
             
         context['products'] = products
         context['products_count'] = products.count()
+        
+        # Get orders for this seller's products
+        if products.exists():
+            seller_order_details = OrderDetail.objects.filter(product__in=products)
+            
+            # Group orders by status
+            processing_orders = []
+            shipped_orders = []
+            delivered_orders = []
+            
+            for order_detail in seller_order_details:
+                order_info = {
+                    'id': order_detail.pk,
+                    'customer_name': order_detail.order_id.full_name,
+                    'created_at': order_detail.created_at,
+                    'product': order_detail.product,
+                    'total': order_detail.order_id.amount,
+                    'status': order_detail.order_status
+                }
+                
+                if order_detail.order_status == 'processing':
+                    processing_orders.append(order_info)
+                elif order_detail.order_status == 'shipping':
+                    shipped_orders.append(order_info)
+                elif order_detail.order_status == 'delivered':
+                    delivered_orders.append(order_info)
+            
+            context['processing_orders'] = processing_orders
+            context['shipped_orders'] = shipped_orders
+            context['delivered_orders'] = delivered_orders
     
     # For buyer dashboard
     if request.user.role == 'buyer':
@@ -385,25 +415,35 @@ def track_order(request):
     
 def process_order(request):
     if request.method == 'POST':
-        order_id = request.POST.get('order_id')
-        new_status = request.POST.get('order_status')
-        
         try:
-            # Get the specific order detail by ID
-            order_detail = OrderDetail.objects.get(id=order_id)
+            order_id = request.POST.get('order_id')
+            new_status = request.POST.get('order_status')
             
-            # Update the order status
-            order_detail.order_status = new_status
-            order_detail.save()
+            # Handle frontend vs database status naming
+            if new_status == 'shipped':
+                new_status = 'shipping'
+                
+            # Get the user's artisans
+            user_artisans = Artisan.objects.filter(added_by=request.user)
             
-            # Optional: Add a success message
-            messages.success(request, f"Order #{order_detail.order_id} status updated to {order_detail.order_status}")
+            # Get the order detail
+            order_detail = get_object_or_404(OrderDetail, pk=order_id)
+            
+            # Check if the product belongs to one of the seller's artisans
+            if order_detail.product.artisan in user_artisans:
+                # Update the order status
+                order_detail.order_status = new_status
+                order_detail.save()
+                
+                messages.success(request, f"Order status updated to {new_status.title()}")
+            else:
+                messages.error(request, "You don't have permission to update this order.")
         
         except OrderDetail.DoesNotExist:
-            # Handle case when order is not found
-            messages.error(request, "Order not found. Please try again.")
+            messages.error(request, "Order not found.")
+        except Exception as e:
+            messages.error(request, f"Error updating order: {str(e)}")
     
-    # Redirect to dashboard after processing
     return redirect('user_dashboard')
 
 #user authentication    

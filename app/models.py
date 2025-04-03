@@ -168,6 +168,7 @@ class OrderDetail(models.Model):
     )
     order_id = models.ForeignKey(PaymentDetails , on_delete= models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    customer = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
     order_status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

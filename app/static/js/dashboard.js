@@ -26,6 +26,26 @@
             });
         });
         
+        // Order status update form handling
+        const orderStatusForms = document.querySelectorAll('.order-status-form');
+        if (orderStatusForms.length > 0) {
+            orderStatusForms.forEach(form => {
+                // Add animation when status is changed
+                const statusSelect = form.querySelector('select[name="order_status"]');
+                if (statusSelect) {
+                    statusSelect.addEventListener('change', function() {
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.classList.add('btn-pulse');
+                            setTimeout(() => {
+                                submitBtn.classList.remove('btn-pulse');
+                            }, 500);
+                        }
+                    });
+                }
+            });
+        }
+        
         // Make nested tabs work (orders, manage orders)
         const nestedTabs = document.querySelectorAll('.nav-tabs .nav-link[data-bs-toggle="tab"]');
         nestedTabs.forEach(tab => {
@@ -56,37 +76,10 @@
             });
         });
 
-        // Order status filter functionality for buyer orders
-        const orderStatusFilter = document.getElementById('orderStatusFilter');
+        // Order status filter functionality for order tables
+        const orderStatusFilter = document.getElementById('manageOrderStatusFilter');
         if (orderStatusFilter) {
             orderStatusFilter.addEventListener('change', function() {
-                const selectedStatus = this.value;
-                const orderRows = document.querySelectorAll('#ordersTable .order-row');
-                
-                orderRows.forEach(row => {
-                    if (selectedStatus === 'all' || row.getAttribute('data-status') === selectedStatus) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-                
-                // Show "No orders found" message if no visible orders
-                const visibleOrders = Array.from(orderRows).filter(row => row.style.display !== 'none');
-                const noOrdersRow = document.querySelector('#ordersTable tr:not(.order-row)');
-                
-                if (visibleOrders.length === 0 && noOrdersRow) {
-                    noOrdersRow.style.display = '';
-                } else if (noOrdersRow) {
-                    noOrdersRow.style.display = 'none';
-                }
-            });
-        }
-        
-        // Order status filter functionality for seller manage orders
-        const manageOrderStatusFilter = document.getElementById('manageOrderStatusFilter');
-        if (manageOrderStatusFilter) {
-            manageOrderStatusFilter.addEventListener('change', function() {
                 const selectedStatus = this.value;
                 const orderRows = document.querySelectorAll('#manageOrdersTable .order-row');
                 
