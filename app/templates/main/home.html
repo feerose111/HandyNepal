@@ -23,6 +23,7 @@
 </section>
 
 <!-- Signup CTA Section -->
+{% if not user.is_authenticated %}
 <section class="signup-cta">
     <div class="container">
         <div class="signup-cta-content">
@@ -34,7 +35,8 @@
             </div>
         </div>
     </div>
-</section>
+</section> 
+{% endif %}
 
 <!-- Featured Categories -->
 <section class="py-5">
@@ -104,72 +106,51 @@
     <div class="container">
         <h2 class="section-title">Featured Products</h2>
         <div class="row g-4">
-            <!-- Product 1 -->
-            <div class="col-6 col-md-3">
-                <div class="product-card">
-                    <div class="position-relative">
-                        <span class="new-badge">New</span>
-                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Handcrafted Wooden Buddha Statue</h5>
-                        <div class="product-price">
-                            $89.99
+            {% if featured_products %}
+                {% for product in featured_products %}
+                <div class="col-6 col-md-3">
+                    <div class="product-card">
+                        <div class="position-relative">
+                            {% if product.is_new %}
+                                <span class="new-badge">New</span>
+                            {% endif %}
+                            {% if product.is_discount %}
+                                <span class="discount-badge">-{{ product.discount_percentage }}%</span>
+                            {% endif %}
+                            
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'images/product.png' %}" class="card-img-top" alt="{{ product.name }}" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
+                            {% endif %}
                         </div>
-                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <div class="product-price">
+                                {% if product.is_discount %}
+                                    <span class="original-price">₹{{ product.price }}</span>
+                                    - ₹{{ product.discount_price }}
+                                {% else %}
+                                    ₹{{ product.price }}
+                                {% endif %}
+                            </div>
+                            <form method="post" action="{% url 'add_to_cart' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Product 2 -->
-            <div class="col-6 col-md-3">
-                <div class="product-card">
-                    <div class="position-relative">
-                        <span class="discount-badge">-20%</span>
-                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Traditional Nepalese Pashmina Shawl</h5>
-                        <div class="product-price">
-                            <span class="original-price">$75.00</span>
-                            $60.00
-                        </div>
-                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
-                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No featured products available at the moment.</p>
                 </div>
-            </div>
-            
-            <!-- Product 3 -->
-            <div class="col-6 col-md-3">
-                <div class="product-card">
-                    <div class="position-relative">
-                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Handmade Ceramic Tea Set</h5>
-                        <div class="product-price">
-                            $45.99
-                        </div>
-                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Product 4 -->
-            <div class="col-6 col-md-3">
-                <div class="product-card">
-                    <div class="position-relative">
-                        <img src="{% static 'images/product.png' %}" class="card-img-top" alt="Product" onerror="this.src='https://via.placeholder.com/300x200?text=Product'">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Traditional Singing Bowl Set</h5>
-                        <div class="product-price">
-                            $129.99
-                        </div>
-                        <a href="#" class="btn btn-outline-primary w-100">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
         <div class="text-center mt-5">
             <a href="{% url 'collections' %}" class="btn btn-primary px-4 py-2">View All Products</a>
@@ -182,39 +163,30 @@
     <div class="container">
         <h2 class="section-title">Meet Our Artisans</h2>
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="artisan-card">
-                    <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Ram Bahadur</h5>
-                        <p class="text-muted">Wood Carving Expert</p>
-                        <p class="small">Creating intricate wooden masterpieces for over 25 years.</p>
-                        <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
+            {% if recent_artisans %}
+                {% for artisan in recent_artisans %}
+                <div class="col-md-4">
+                    <div class="artisan-card">
+                        {% if artisan.image %}
+                            <img src="{{ artisan.image.url }}" class="card-img-top" alt="{{ artisan.first_name }} {{ artisan.last_name }}">
+                        {% else %}
+                            <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ artisan.first_name }} {{ artisan.last_name }}</h5>
+                            <p class="text-muted">{{ artisan.get_artisan_type_display }}</p>
+                            <p class="small">{{ artisan.description|truncatechars:100 }}</p>
+                            <p class="small text-muted"><i class="fas fa-map-marker-alt me-1"></i>{{ artisan.location }}</p>
+                            <a href="{% url 'artisans' %}" class="btn btn-sm btn-outline-primary">View More Artisans</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="artisan-card">
-                    <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Sita Sharma</h5>
-                        <p class="text-muted">Textile Weaver</p>
-                        <p class="small">Specializing in traditional Nepalese textile patterns.</p>
-                        <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
-                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No artisans available at the moment.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="artisan-card">
-                    <img src="{% static 'images/artisan.png' %}" class="card-img-top" alt="Artisan" onerror="this.src='https://via.placeholder.com/300x250?text=Artisan'">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Krishna Tamang</h5>
-                        <p class="text-muted">Metal Craftsman</p>
-                        <p class="small">Third-generation artisan creating exquisite metal works.</p>
-                        <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </section>

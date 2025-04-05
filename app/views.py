@@ -18,7 +18,19 @@ LIVE_SECRET_KEY = settings.LIVE_SECRET_KEY
 # Create your views here.
 
 def home(request):
-    return render(request, 'main/home.html')
+    # Get featured products
+    featured_products = Product.objects.filter(is_featured=True)[:4]  # Limit to 4 featured products
+    
+    # Get recent artisans (limit to 3)
+    recent_artisans = Artisan.objects.all().order_by('-id')[:3]  # Get 3 most recently added artisans
+    
+    # Create context with featured products and artisans
+    context = {
+        'featured_products': featured_products,
+        'recent_artisans': recent_artisans
+    }
+    
+    return render(request, 'main/home.html', context)
 
 def collections(request):
     # Get all products
