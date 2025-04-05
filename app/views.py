@@ -26,6 +26,19 @@ def collections(request):
     
     # Filter by category if specified
     category = request.GET.get('category')
+    search_query = request.GET.get('search', '')
+    
+    if search_query:
+    # Filter products by search query in name OR description (using Q objects for OR condition)
+        from django.db.models import Q
+        products = Product.objects.filter(
+            Q(name__icontains=search_query) | 
+            Q(description__icontains=search_query)
+        )
+    else:
+        # If no query, get all products
+        products = Product.objects.all()
+    
     if category:
         products = products.filter(category=category)
     
@@ -66,6 +79,7 @@ def collections(request):
         'products': products_paginated,
         'items_per_page': items_per_page,
         'total_products': len(products),
+        'search_query': search_query,
     }
     
     return render(request, 'main/collections.html', context)
@@ -940,3 +954,4 @@ def edit_artisan(request, artisan_id):
             messages.error(request, f'Error updating artisan: {str(e)}')
     
     return redirect('user_dashboard')
+

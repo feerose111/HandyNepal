@@ -32,8 +32,8 @@
                 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     {% if user.is_authenticated %}
-                    <form class="search-form d-flex mx-auto" style="max-width: 500px;" action="{% url 'home' %}" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Search handcrafted products..." aria-label="Search" name="q">
+                    <form class="search-form d-flex mx-auto" style="max-width: 500px;" action="{% url 'collections' %}" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Search handcrafted products..." aria-label="Search" name="search">
                         <button class="btn btn-outline-warning" type="submit"><i class="fas fa-search"></i></button>
                     </form>
                     {% endif %}
