@@ -1,0 +1,438 @@
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/background1.png') no-repeat center center;
+    background-size: cover;
+    padding: 180px 0;
+    color: white;
+    position: relative;
+}
+
+.hero-section h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #E6A23C;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.category-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.category-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-card {
+    border: 1px solid rgba(139, 69, 19, 0.1);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: all 0.3s;
+    height: 100%;
+    background-color: white;
+    box-shadow: var(--box-shadow);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #c0392b;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.new-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #2ecc71;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.product-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+.product-price {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.testimonial-section {
+    background-color: #f8f7f2;
+    padding: 80px 0;
+}
+
+.testimonial-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: var(--box-shadow);
+    border-top: 3px solid var(--secondary-color);
+}
+
+.artisan-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+}
+
+.artisan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.artisan-card img {
+    height: 250px;
+    object-fit: cover;
+}
+
+.info-icons {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.newsletter-section {
+    background-color: #efe6d5;
+    padding: 60px 0;
+    position: relative;
+}
+
+.section-title {
+    position: relative;
+    margin-bottom: 2.5rem;
+    color: var(--primary-color);
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+}
+
+.section-title:after {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 3px;
+    background: var(--secondary-color);
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Signup CTA Section */
+.signup-cta {
+    background-color: #efe6d5;
+    padding: 50px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.signup-cta::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('{% static "images/wall_woodcraft.png" %}') repeat;
+    opacity: 0.05;
+    z-index: 0;
+}
+
+.signup-cta-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.signup-cta h2 {
+    color: var(--primary-color);
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+}
+
+.signup-cta p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: var(--dark-color);
+}
+
+.signup-cta .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.signup-cta .btn-signup {
+    background-color: var(--secondary-color);
+    color: var(--dark-color);
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: var(--border-radius);
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.signup-cta .btn-signup:hover {
+    background-color: var(--dark-color);
+    color: var(--secondary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.signup-cta .btn-login {
+    background-color: transparent;
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary-color);
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.signup-cta .btn-login:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Collection Process */
+.collection-process {
+    padding: 80px 0;
+    background-color: var(--light-color);
+}
+
+.process-step {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    height: 100%;
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s;
+    text-align: center;
+    border-top: 3px solid var(--secondary-color);
+}
+
+.process-step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.step-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    background-color: rgba(139, 69, 19, 0.1);
+    margin: 0 auto 20px;
+    transition: all 0.3s;
+}
+
+.process-step:hover .step-icon {
+    background-color: var(--secondary-color);
+    color: var(--dark-color);
+}
+
+.process-step h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.process-step p {
+    color: var(--dark-color);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+    .hero-section {
+        padding: 150px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    
+    .signup-cta h2 {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .process-step {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-section {
+        padding: 120px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .signup-cta h2 {
+        font-size: 1.8rem;
+    }
+    
+    .signup-cta p {
+        font-size: 1rem;
+    }
+    
+    .category-card img,
+    .product-card img,
+    .artisan-card img {
+        height: 180px;
+    }
+    
+    .process-step {
+        padding: 20px;
+    }
+    
+    .step-icon {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        font-size: 2rem;
+    }
+    
+    .process-step h4 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero-section {
+        padding: 100px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-section p {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+    }
+    
+    .section-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .signup-cta h2 {
+        font-size: 1.6rem;
+    }
+    
+    .signup-cta .btn-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .signup-cta .btn-signup,
+    .signup-cta .btn-login {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .category-card img,
+    .product-card img,
+    .artisan-card img {
+        height: 160px;
+    }
+    
+    .testimonial-card {
+        padding: 20px;
+    }
+    
+    .process-step {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .step-icon {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .process-step h4 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    .process-step p {
+        font-size: 0.9rem;
+    }
+}

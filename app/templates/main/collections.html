@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Collections - HandyNepal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/collections.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Collection Header -->
+<section class="collection-header">
+    <div class="container">
+        <h1 class="collection-title">Our Collections</h1>
+        <p class="collection-description">Discover the rich cultural heritage of Nepal through our handcrafted products, each telling a story of tradition, craftsmanship, and artistic excellence.</p>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<div class="container">
+    <div class="filter-section">
+        <form method="get" action="{% url 'collections' %}" class="row g-3">
+            <div class="col-md-4">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" name="category" id="category">
+                    <option value="">All Categories</option>
+                    <option value="wood-crafts" {% if request.GET.category == 'wood-crafts' %}selected{% endif %}>Wood Crafts</option>
+                    <option value="pottery" {% if request.GET.category == 'pottery' %}selected{% endif %}>Pottery</option>
+                    <option value="textiles" {% if request.GET.category == 'textiles' %}selected{% endif %}>Textiles</option>
+                    <option value="metal-works" {% if request.GET.category == 'metal-works' %}selected{% endif %}>Metal Works</option>
+                    <option value="paper-crafts" {% if request.GET.category == 'paper-crafts' %}selected{% endif %}>Paper Crafts</option>
+                    <option value="jewelry" {% if request.GET.category == 'jewelry' %}selected{% endif %}>Jewelry</option>
+                    <option value="other" {% if request.GET.category == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="sort" class="form-label">Sort By</label>
+                <select class="form-select" name="sort" id="sort">
+                    <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Newest</option>
+                    <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="name_asc" {% if request.GET.sort == 'name_asc' %}selected{% endif %}>Name: A to Z</option>
+                    <option value="name_desc" {% if request.GET.sort == 'name_desc' %}selected{% endif %}>Name: Z to A</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-warning w-100">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="container">
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="product-card h-100">
+                        <div class="product-img-container">
+                            {% if product.is_new %}
+                                <div class="product-badge">
+                                    <span class="badge bg-warning">New</span>
+                                </div>
+                            {% elif product.is_bestseller %}
+                                <div class="product-badge">
+                                    <span class="badge bg-success">Bestseller</span>
+                                </div>
+                            {% endif %}
+                            
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+                            {% else %}
+                                <img src="{% static 'images/placeholder-product.jpg' %}" alt="{{ product.name }}" class="product-img">
+                            {% endif %}
+                        </div>
+                        <div class="product-details d-flex flex-column">
+                            <h3 class="product-title">{{ product.name }}</h3>
+                            <p class="product-category">{{ product.get_category_display_name }}</p>
+                            {% if product.artisan %}
+                                <p class="product-artisan">By {{ product.artisan }}</p>
+                            {% endif %}
+                            <div class="d-flex align-items-center mb-3">
+                                {% if product.is_discount %}
+                                    <span class="product-original-price">₹{{ product.price }}</span>
+                                    <span class="product-price me-2">₹{{ product.discount_price }}</span>
+                                    <span class="discount-badge">{{ product.discount_percentage }}% OFF</span>
+                                {% else %}
+                                    <span class="product-price">₹{{ product.price }}</span>
+                                {% endif %}
+                            </div>
+                            <form method="post" action="{% url 'add_to_cart' %}" class="mt-auto">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="add-to-cart-btn">
+                                    <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="no-products">
+                    <p>No products found matching your criteria.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Simple Pagination -->
+    {% if products.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination">
+                {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                {% endif %}
+                
+                {% with ''|center:products.paginator.num_pages as range %}
+                {% for _ in range %}
+                    {% with forloop.counter as i %}
+                        <li class="page-item {% if products.number == i %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ i }}</a>
+                        </li>
+                    {% endwith %}
+                {% endfor %}
+                {% endwith %}
+                
+                {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %} 
