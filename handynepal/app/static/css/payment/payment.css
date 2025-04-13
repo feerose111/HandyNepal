@@ -1,0 +1,287 @@
+/* Payment Portal Styles */
+:root {
+    --primary-color: #8b4513; /* Warm brown - traditional wood color */
+    --secondary-color: #d4af37; /* Gold - premium accent */
+    --accent-color: #9c6644; /* Terracotta - earthen pottery color */
+    --dark-color: #2e2110; /* Deep brown - traditional wood finishes */
+    --light-color: #f5f0e6; /* Cream - traditional paper color */
+    --border-radius: 8px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Payment Header */
+.payment-header {
+    background-color: var(--dark-color);
+    padding: 60px 0;
+    text-align: center;
+    color: white;
+    position: relative;
+    margin-bottom: 50px;
+}
+
+.payment-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../../images/pattern.png') repeat;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.payment-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+    color: var(--secondary-color);
+}
+
+.payment-description {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+.payment-container {
+    margin-bottom: 50px;
+}
+
+.payment-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Form Styling */
+.form-section {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 25px;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+}
+
+.form-section h4 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.1);
+}
+
+/* Order Summary Styling */
+.order-summary {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.order-summary h3 {
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.4rem;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item-name {
+    font-weight: 500;
+}
+
+.order-item-qty {
+    color: #777;
+    font-size: 0.9rem;
+    margin-left: 8px;
+}
+
+.order-item-price {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.cart-total.grand-total {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.empty-cart-message {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+}
+
+/* Terms and Conditions */
+.terms-container {
+    margin-bottom: 25px;
+}
+
+.terms-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.terms-label input {
+    margin-top: 4px;
+    margin-right: 10px;
+}
+
+.terms-label span {
+    font-size: 0.95rem;
+}
+
+.terms-label a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.terms-label a:hover {
+    text-decoration: underline;
+}
+
+/* Button Styling */
+.checkout-btn {
+    width: 100%;
+    padding: 12px 0;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.1rem;
+}
+
+.checkout-btn:hover {
+    background-color: var(--dark-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-cart-container {
+    text-align: center;
+}
+
+.back-to-cart-link {
+    display: inline-block;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.back-to-cart-link:hover {
+    color: var(--dark-color);
+    transform: translateY(-2px);
+}
+
+/* Hide fields that should be hidden */
+.hidden {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .payment-header {
+        padding: 40px 0;
+    }
+    
+    .payment-title {
+        font-size: 2.2rem;
+    }
+    
+    .payment-description {
+        font-size: 1rem;
+    }
+    
+    .payment-card {
+        padding: 20px;
+    }
+    
+    .order-summary {
+        padding: 20px;
+    }
+    
+    .order-summary h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .payment-title {
+        font-size: 1.8rem;
+    }
+    
+    .form-section h4 {
+        font-size: 1.1rem;
+    }
+} 

@@ -56,138 +56,150 @@
       <h2 class="section-title">Featured Artisans</h2>
       <p class="section-subtitle">Meet the master craftspeople behind our most popular collections</p>
       
-      <div class="row g-4">
-         <!-- Artisan 1 -->
-         <div class="col-md-6 col-lg-4">
-            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal1">
+      <!-- Artisan Carousel -->
+      <div id="artisanCarousel" class="carousel slide" data-bs-ride="carousel">
+         <div class="carousel-indicators">
+            <button type="button" data-bs-target="#artisanCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#artisanCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#artisanCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#artisanCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+         </div>
+         
+         <div class="carousel-inner">
+            <!-- First slide -->
+            <div class="carousel-item active">
+               <div class="row">
+                  {% for artisan in artisans|slice:":3" %}
+                  <div class="col-md-4">
+                     <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal{{ artisan.id }}">
                <div class="artisan-img-container">
-                  <img src="{% static 'images/artisan.png' %}" alt="Ram Bahadur" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  {% if artisan.image %}
+                           <img src="{{ artisan.image.url }}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}">
+                  {% else %}
+                           <img src="{% static 'images/artisan.png' %}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ artisan.first_name|urlencode }}+{{ artisan.last_name|urlencode }}'">
+                  {% endif %}
                   <div class="artisan-overlay">
                      <span class="btn-view-profile">View Profile</span>
                   </div>
                </div>
                <div class="artisan-content">
-                  <h3 class="artisan-name">Ram Bahadur</h3>
-                  <p class="artisan-specialty">Wood Carving Expert</p>
-                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Bhaktapur, Nepal</p>
+                           <h3 class="artisan-name">{{ artisan.first_name }} {{ artisan.last_name }}</h3>
+                           <p class="artisan-specialty">{{ artisan.get_artisan_type_display }}</p>
+                           <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> {{ artisan.location }}</p>
                   <div class="artisan-skills">
-                     <span>Wood Carving</span>
-                     <span>Sculpture</span>
-                     <span>Restoration</span>
+                              <span>{{ artisan.get_artisan_type_display }}</span>
                   </div>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+               </div>
+            </div>
+            
+            <!-- Second slide -->
+            <div class="carousel-item">
+               <div class="row">
+                  {% for artisan in artisans|slice:"3:6" %}
+                  <div class="col-md-4">
+                     <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal{{ artisan.id }}">
+                        <div class="artisan-img-container">
+                           {% if artisan.image %}
+                           <img src="{{ artisan.image.url }}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}">
+                           {% else %}
+                           <img src="{% static 'images/artisan.png' %}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ artisan.first_name|urlencode }}+{{ artisan.last_name|urlencode }}'">
+                           {% endif %}
+                           <div class="artisan-overlay">
+                              <span class="btn-view-profile">View Profile</span>
+                           </div>
+                        </div>
+                        <div class="artisan-content">
+                           <h3 class="artisan-name">{{ artisan.first_name }} {{ artisan.last_name }}</h3>
+                           <p class="artisan-specialty">{{ artisan.get_artisan_type_display }}</p>
+                           <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> {{ artisan.location }}</p>
+                           <div class="artisan-skills">
+                              <span>{{ artisan.get_artisan_type_display }}</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </div>
+            </div>
+            
+            <!-- Third slide -->
+            <div class="carousel-item">
+               <div class="row">
+                  {% for artisan in artisans|slice:"6:9" %}
+                  <div class="col-md-4">
+                     <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal{{ artisan.id }}">
+                        <div class="artisan-img-container">
+                           {% if artisan.image %}
+                           <img src="{{ artisan.image.url }}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}">
+                           {% else %}
+                           <img src="{% static 'images/artisan.png' %}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ artisan.first_name|urlencode }}+{{ artisan.last_name|urlencode }}'">
+                           {% endif %}
+                           <div class="artisan-overlay">
+                              <span class="btn-view-profile">View Profile</span>
+                           </div>
+                        </div>
+                        <div class="artisan-content">
+                           <h3 class="artisan-name">{{ artisan.first_name }} {{ artisan.last_name }}</h3>
+                           <p class="artisan-specialty">{{ artisan.get_artisan_type_display }}</p>
+                           <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> {{ artisan.location }}</p>
+                           <div class="artisan-skills">
+                              <span>{{ artisan.get_artisan_type_display }}</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </div>
+            </div>
+            
+            <!-- Fourth slide -->
+            <div class="carousel-item">
+               <div class="row">
+                  {% for artisan in artisans|slice:"9:12" %}
+                  <div class="col-md-4">
+                     <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal{{ artisan.id }}">
+                        <div class="artisan-img-container">
+                           {% if artisan.image %}
+                           <img src="{{ artisan.image.url }}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}">
+                           {% else %}
+                           <img src="{% static 'images/artisan.png' %}" class="artisan-img" alt="{{ artisan.first_name }} {{ artisan.last_name }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ artisan.first_name|urlencode }}+{{ artisan.last_name|urlencode }}'">
+                           {% endif %}
+                           <div class="artisan-overlay">
+                              <span class="btn-view-profile">View Profile</span>
+                           </div>
+                        </div>
+                        <div class="artisan-content">
+                           <h3 class="artisan-name">{{ artisan.first_name }} {{ artisan.last_name }}</h3>
+                           <p class="artisan-specialty">{{ artisan.get_artisan_type_display }}</p>
+                           <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> {{ artisan.location }}</p>
+                           <div class="artisan-skills">
+                              <span>{{ artisan.get_artisan_type_display }}</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
                </div>
             </div>
          </div>
          
-         <!-- Artisan 2 -->
-         <div class="col-md-6 col-lg-4">
-            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal2">
-               <div class="artisan-img-container">
-                  <img src="{% static 'images/artisan.png' %}" alt="Sita Sharma" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
-                  <div class="artisan-overlay">
-                     <span class="btn-view-profile">View Profile</span>
-                  </div>
-               </div>
-               <div class="artisan-content">
-                  <h3 class="artisan-name">Sita Sharma</h3>
-                  <p class="artisan-specialty">Textile Weaver</p>
-                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Kirtipur, Nepal</p>
-                  <div class="artisan-skills">
-                     <span>Weaving</span>
-                     <span>Dyeing</span>
-                     <span>Embroidery</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Artisan 3 -->
-         <div class="col-md-6 col-lg-4">
-            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal3">
-               <div class="artisan-img-container">
-                  <img src="{% static 'images/artisan.png' %}" alt="Krishna Tamang" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
-                  <div class="artisan-overlay">
-                     <span class="btn-view-profile">View Profile</span>
-                  </div>
-               </div>
-               <div class="artisan-content">
-                  <h3 class="artisan-name">Krishna Tamang</h3>
-                  <p class="artisan-specialty">Metal Craftsman</p>
-                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Patan, Nepal</p>
-                  <div class="artisan-skills">
-                     <span>Metal Work</span>
-                     <span>Singing Bowls</span>
-                     <span>Statues</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Artisan 4 -->
-         <div class="col-md-6 col-lg-4">
-            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal4">
-               <div class="artisan-img-container">
-                  <img src="{% static 'images/artisan.png' %}" alt="Maya Gurung" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
-                  <div class="artisan-overlay">
-                     <span class="btn-view-profile">View Profile</span>
-                  </div>
-               </div>
-               <div class="artisan-content">
-                  <h3 class="artisan-name">Maya Gurung</h3>
-                  <p class="artisan-specialty">Pottery Expert</p>
-                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Thimi, Nepal</p>
-                  <div class="artisan-skills">
-                     <span>Pottery</span>
-                     <span>Ceramics</span>
-                     <span>Clay Art</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Artisan 5 -->
-         <div class="col-md-6 col-lg-4">
-            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal5">
-               <div class="artisan-img-container">
-                  <img src="{% static 'images/artisan.png' %}" alt="Dipak Shrestha" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
-                  <div class="artisan-overlay">
-                     <span class="btn-view-profile">View Profile</span>
-                  </div>
-               </div>
-               <div class="artisan-content">
-                  <h3 class="artisan-name">Dipak Shrestha</h3>
-                  <p class="artisan-specialty">Paper Craftsman</p>
-                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
-                  <div class="artisan-skills">
-                     <span>Lokta Paper</span>
-                     <span>Journals</span>
-                     <span>Paper Art</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-         
-         <!-- Artisan 6 -->
-         <div class="col-md-6 col-lg-4">
-            <div class="artisan-card" data-bs-toggle="modal" data-bs-target="#artisanModal6">
-               <div class="artisan-img-container">
-                  <img src="{% static 'images/artisan.png' %}" alt="Laxmi Maharjan" class="artisan-img" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
-                  <div class="artisan-overlay">
-                     <span class="btn-view-profile">View Profile</span>
-                  </div>
-               </div>
-               <div class="artisan-content">
-                  <h3 class="artisan-name">Laxmi Maharjan</h3>
-                  <p class="artisan-specialty">Jewelry Maker</p>
-                  <p class="artisan-location"><i class="fas fa-map-marker-alt"></i> Lalitpur, Nepal</p>
-                  <div class="artisan-skills">
-                     <span>Silver Work</span>
-                     <span>Beadwork</span>
-                     <span>Traditional Jewelry</span>
-                  </div>
-               </div>
-            </div>
-         </div>
+         <button class="carousel-control-prev" type="button" data-bs-target="#artisanCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+         </button>
+         <button class="carousel-control-next" type="button" data-bs-target="#artisanCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+         </button>
+      </div>
+      
+      <!-- View All Artisans Button -->
+      <div class="text-center mt-4">
+         <a href="#" class="btn btn-outline-primary">View All Artisans</a>
       </div>
    </div>
 </div>
@@ -214,31 +226,33 @@
 </div>
 
 <!-- Artisan Modals -->
-<!-- Modal 1: Ram Bahadur -->
-<div class="modal fade" id="artisanModal1" tabindex="-1" aria-labelledby="artisanModal1Label" aria-hidden="true">
+{% for artisan in artisans %}
+<div class="modal fade" id="artisanModal{{ artisan.id }}" tabindex="-1" aria-labelledby="artisanModal{{ artisan.id }}Label" aria-hidden="true">
    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
          <div class="modal-header">
-            <h5 class="modal-title" id="artisanModal1Label">Ram Bahadur</h5>
+            <h5 class="modal-title" id="artisanModal{{ artisan.id }}Label">{{ artisan.first_name }} {{ artisan.last_name }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
             <div class="row">
                <div class="col-md-5">
-                  <img src="{% static 'images/artisan.png' %}" alt="Ram Bahadur" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
+                  {% if artisan.image %}
+                  <img src="{{ artisan.image.url }}" alt="{{ artisan.first_name }} {{ artisan.last_name }}" class="img-fluid rounded">
+                  {% else %}
+                  <img src="{% static 'images/artisan.png' %}" alt="{{ artisan.first_name }} {{ artisan.last_name }}" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/400x500?text={{ artisan.first_name|urlencode }}+{{ artisan.last_name|urlencode }}'">
+                  {% endif %}
                   <div class="artisan-details mt-3">
-                     <p><strong>Specialty:</strong> Wood Carving Expert</p>
-                     <p><strong>Location:</strong> Bhaktapur, Nepal</p>
-                     <p><strong>Experience:</strong> 25+ years</p>
-                     <p><strong>Products:</strong> Wooden Statues, Masks, Decorative Items</p>
+                     <p><strong>Specialty:</strong> {{ artisan.get_artisan_type_display }}</p>
+                     <p><strong>Location:</strong> {{ artisan.location }}</p>
+                     <p><strong>Experience:</strong> {{ artisan.experience|default:"Varies" }}</p>
+                     <p><strong>Products:</strong> {{ artisan.products|default:"Various Handicrafts" }}</p>
                   </div>
                </div>
                <div class="col-md-7">
                   <h4>Artisan Story</h4>
-                  <p>Ram Bahadur comes from a long line of wood carvers in Bhaktapur, a city renowned for its wood carving tradition. He began learning the craft at the age of 10 from his father and grandfather, who were master carvers in their community.</p>
-                  <p>Specializing in traditional Nepalese motifs and religious figures, Ram's work is characterized by intricate details and smooth finishing. Each piece takes anywhere from a few days to several months to complete, depending on the complexity.</p>
-                  <p>Ram is particularly known for his Buddha statues and traditional Newari window frames, which showcase the rich cultural heritage of Nepal. He uses sustainable local wood and traditional hand tools that have been passed down through generations.</p>
-                  <p>Today, Ram not only creates masterpieces but also trains young apprentices, ensuring that this ancient craft continues to thrive in modern times.</p>
+                  <p>{{ artisan.description|default:"This artisan is a skilled craftsperson from Nepal, dedicated to preserving traditional crafting techniques while creating beautiful handmade products." }}</p>
+                  
                   <h4 class="mt-4">Featured Products</h4>
                   <div class="row g-2 mt-2">
                      <div class="col-4">
@@ -256,60 +270,86 @@
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="{% url 'home' %}" class="btn btn-primary">View Products</a>
+            <a href="{% url 'collections' %}?artisan={{ artisan.first_name|lower }}-{{ artisan.last_name|lower }}" class="btn btn-primary">View Products</a>
          </div>
       </div>
    </div>
 </div>
+{% endfor %}
 
-<!-- Modal 2: Sita Sharma -->
-<div class="modal fade" id="artisanModal2" tabindex="-1" aria-labelledby="artisanModal2Label" aria-hidden="true">
-   <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title" id="artisanModal2Label">Sita Sharma</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            <div class="row">
-               <div class="col-md-5">
-                  <img src="{% static 'images/artisan.png' %}" alt="Sita Sharma" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/400x500?text=Artisan'">
-                  <div class="artisan-details mt-3">
-                     <p><strong>Specialty:</strong> Textile Weaver</p>
-                     <p><strong>Location:</strong> Kirtipur, Nepal</p>
-                     <p><strong>Experience:</strong> 18 years</p>
-                     <p><strong>Products:</strong> Pashmina Shawls, Traditional Fabrics, Garments</p>
-                  </div>
-               </div>
-               <div class="col-md-7">
-                  <h4>Artisan Story</h4>
-                  <p>Sita Sharma learned the art of weaving from her mother at a young age in their small village in Kirtipur. What started as a household necessity became her passion and eventually her livelihood.</p>
-                  <p>Sita specializes in traditional Nepalese textile patterns, particularly the intricate designs found in Dhaka fabric and Pashmina shawls. She uses natural dyes derived from local plants and minerals, creating vibrant colors that are both beautiful and environmentally friendly.</p>
-                  <p>Her weaving process is entirely done by hand on traditional looms, a technique that has remained unchanged for centuries. Each piece takes several weeks to complete, with patterns that tell stories of Nepalese culture and history.</p>
-                  <p>Sita now leads a women's weaving cooperative that provides sustainable income for over 20 women in her community, empowering them through the preservation of traditional crafts.</p>
-                  <h4 class="mt-4">Featured Products</h4>
-                  <div class="row g-2 mt-2">
-                     <div class="col-4">
-                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
-                     </div>
-                     <div class="col-4">
-                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
-                     </div>
-                     <div class="col-4">
-                        <img src="{% static 'images/product.png' %}" alt="Product" class="img-fluid rounded" onerror="this.src='https://via.placeholder.com/150x150?text=Product'">
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="{% url 'home' %}" class="btn btn-primary">View Products</a>
-         </div>
-      </div>
-   </div>
-</div>
-
-<!-- Additional modals for other artisans would follow the same pattern -->
+{% block extra_js %}
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+      // Initialize the carousel with options
+      var artisanCarousel = new bootstrap.Carousel(document.getElementById('artisanCarousel'), {
+         interval: 5000,  // Change slides every 5 seconds
+         wrap: true,      // Continuous loop
+         touch: true      // Enable touch swiping on mobile
+      });
+      
+      // Pause carousel on modal open
+      var artisanModals = document.querySelectorAll('[id^="artisanModal"]');
+      artisanModals.forEach(function(modal) {
+         modal.addEventListener('show.bs.modal', function() {
+            artisanCarousel.pause();
+         });
+         
+         modal.addEventListener('hidden.bs.modal', function() {
+            artisanCarousel.cycle();
+         });
+      });
+      
+      // Add hover pause functionality
+      var carouselElement = document.getElementById('artisanCarousel');
+      carouselElement.addEventListener('mouseenter', function() {
+         artisanCarousel.pause();
+      });
+      
+      carouselElement.addEventListener('mouseleave', function() {
+         artisanCarousel.cycle();
+      });
+      
+      // Handle responsive behavior
+      function adjustCarousel() {
+         var width = window.innerWidth;
+         var carouselItems = document.querySelectorAll('#artisanCarousel .carousel-item');
+         
+         if (width < 768) {
+            // On mobile, ensure each artisan card is in its own slide
+            carouselItems.forEach(function(item) {
+               var row = item.querySelector('.row');
+               if (row) {
+                  var cards = row.querySelectorAll('.col-md-4');
+                  cards.forEach(function(card, index) {
+                     if (index > 0) {
+                        card.style.display = 'none';
+                     } else {
+                        card.style.display = '';
+                     }
+                  });
+               }
+            });
+         } else {
+            // On desktop, show all cards in each slide
+            carouselItems.forEach(function(item) {
+               var row = item.querySelector('.row');
+               if (row) {
+                  var cards = row.querySelectorAll('.col-md-4');
+                  cards.forEach(function(card) {
+                     card.style.display = '';
+                  });
+               }
+            });
+         }
+      }
+      
+      // Initial adjustment
+      adjustCarousel();
+      
+      // Adjust on window resize
+      window.addEventListener('resize', adjustCarousel);
+   });
+</script>
+{% endblock %}
 
 {% endblock %} 
